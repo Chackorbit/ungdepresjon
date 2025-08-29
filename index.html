@@ -23,7 +23,6 @@
         width: 100%;
         padding: 20px 40px;
       }
-
       .header .logo {
         max-height: 80px;
         max-width: 500px;
@@ -37,11 +36,9 @@
         max-width: 600px;
         width: 100%;
         height: 400px;
-        margin-left: auto;
-        margin-right: auto;
+        margin: auto;
         overflow: hidden;
       }
-
       .list li {
         display: flex;
         justify-content: center;
@@ -57,9 +54,6 @@
         height: 100%;
         border-radius: 10px;
         transition: transform 0.6s ease, opacity 0.6s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         color: #fff;
         font-weight: 700;
         text-transform: uppercase;
@@ -69,7 +63,7 @@
       .list li::before {
         content: "";
         position: absolute;
-        top: 0px;
+        top: 0;
         left: 50%;
         transform: translateX(-50%);
         max-width: 269px;
@@ -82,15 +76,15 @@
         pointer-events: none;
       }
 
-      /* positions by class */
+      /* позиції */
       .hide {
         transform: translateX(-420px) scale(0.7);
         opacity: 0;
         z-index: 1;
       }
       .prev {
-        transform: translateX(-220px) scale(0.85);
-        opacity: 0.9;
+        transform: translateX(-60px) scale(0.85);
+        opacity: 0.5;
         z-index: 2;
         cursor: pointer;
       }
@@ -100,8 +94,8 @@
         z-index: 3;
       }
       .next {
-        transform: translateX(220px) scale(0.85);
-        opacity: 0.9;
+        transform: translateX(60px) scale(0.85);
+        opacity: 0.5;
         z-index: 2;
         cursor: pointer;
       }
@@ -112,22 +106,20 @@
       }
 
       .item {
-        position: relative; /* важливо для абсолютного позиціонування відео */
+        position: relative;
         max-width: 240px;
         width: 100%;
         border-radius: 30px;
         overflow: hidden;
       }
-
       .video-container {
         max-width: 240px;
         max-height: 480px;
-        width: 100%; /* ширина екрану всередині телефону */
-        height: 100%; /* висота екрану */
+        width: 100%;
+        height: 100%;
         overflow: hidden;
         border-radius: 50px;
       }
-
       .video {
         max-width: 250px;
         max-height: 420px;
@@ -136,7 +128,6 @@
         object-fit: cover;
         display: block;
       }
-
       .video img {
         width: 100%;
         height: 100%;
@@ -152,13 +143,11 @@
         text-align: center;
         padding: 20px;
       }
-
       .btn-container {
         display: flex;
         gap: 10px;
         max-width: 240px;
         width: 100%;
-        display: flex;
         margin-bottom: 20px;
         font-size: 18px;
         font-weight: bold;
@@ -171,15 +160,14 @@
         max-width: 200px;
         width: 100%;
         padding: 15px 5px;
-        background-color: #000000;
+        background-color: #000;
         color: #fff;
         text-decoration: none;
         border-radius: 5px;
-        transition: background-color 0.3s ease;
         font-size: 12px;
         text-align: center;
+        transition: background-color 0.3s ease;
       }
-
       .btn img {
         max-width: 200px;
         width: 100%;
@@ -194,28 +182,19 @@
         transform: translateX(-50%);
         padding: 12px 20px;
         border-radius: 12px;
-
-        /* контраст і фон */
         background: rgba(0, 0, 0, 0.6);
         color: #fff;
-
-        /* ефект */
         font-size: 1.2rem;
         font-weight: bold;
         text-align: center;
         text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
-
-        /* анімація */
-
         animation: fadeSlideIn 1s ease-out forwards;
-        background: rgba(0, 0, 0, 0.6);
       }
 
       .text-container p {
         font-size: clamp(20px, 5vw, 20px);
         text-shadow: 0 0 5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 0, 0, 0.4);
       }
-
       .text-container span {
         display: inline-block;
         opacity: 0;
@@ -246,14 +225,14 @@
     <header class="header">
       <img class="logo" src="./img/logo.png" alt="logo" />
     </header>
+
     <ul class="list" aria-label="carousel">
       <li class="hide">
         <div class="item">
           <div class="text-container">
-            <p id="animatedText">Testing ensures knowledge transfer.</p>
+            <p>Testing ensures knowledge transfer.</p>
           </div>
-
-          <div style="max-height: 420px" class="video-container">
+          <div class="video-container">
             <video class="video" playsinline>
               <source src="./img/Video4.mov" type="video/mp4" />
             </video>
@@ -264,10 +243,10 @@
         <div class="item">
           <div
             class="video-container container"
-            style="background-color: #fff; max-height: 420px; height: 380px"
+            style="background-color: #fff; height: 380px"
           >
             <div class="btn-container">
-              <a href="#" class="btn"> Downloand our pdf </a>
+              <a href="#" class="btn">Download our pdf</a>
             </div>
             <div class="btn-container">
               <a href="https://globalcaredevelopment.com/about/" class="btn"
@@ -283,10 +262,9 @@
       <li class="act">
         <div class="item">
           <div class="text-container">
-            <p id="animatedText">Communication to kids needs to be VISUAL</p>
+            <p>Communication to kids needs to be VISUAL</p>
           </div>
-
-          <div style="max-height: 420px" class="video-container">
+          <div class="video-container">
             <video class="video" playsinline autoplay muted loop>
               <source src="./img/Video1.mp4" type="video/mp4" />
             </video>
@@ -295,9 +273,7 @@
       </li>
       <li class="next">
         <div class="item">
-          <div class="text-container">
-            <p id="animatedText">In a motivating package</p>
-          </div>
+          <div class="text-container"><p>In a motivating package</p></div>
           <div class="video-container">
             <video class="video" playsinline>
               <source src="./img/Video2.mp4" type="video/mp4" />
@@ -308,86 +284,46 @@
       <li class="new-next">
         <div class="item">
           <div class="text-container">
-            <p id="animatedText">And with the right incentives.</p>
+            <p>And with the right incentives.</p>
           </div>
-
           <div class="video-container">
-            <img
-              style="max-height: 380px"
-              class="video"
-              src="./img/video3.png"
-              alt="img3"
-            />
+            <img class="video" src="./img/video3.png" alt="img3" />
           </div>
         </div>
       </li>
     </ul>
 
     <script src="https://hammerjs.github.io/dist/hammer.js"></script>
-
     <script>
       const list = document.querySelector(".list");
       let nodes = Array.from(list.children);
       const roles = ["hide", "prev", "act", "next", "new-next"];
-      let offset = 220 + 100;
       let isScrolling = false;
 
-      // Оновлюємо відстань між елементами
-      function updateOffset() {
-        const liWidth = nodes[0].offsetWidth;
-        const containerWidth = list.offsetWidth;
-        offset = liWidth + Math.min(100, (containerWidth - liWidth * 3) / 2);
-      }
-
-      // Присвоюємо ролі, позиції, масштаб, opacity та керуємо відео
+      // Присвоюємо ролі та керуємо відео
       function applyRoles() {
         nodes.forEach((node, i) => {
           node.className = "";
           node.classList.add(roles[i]);
 
-          // Відео
           const video = node.querySelector("video");
           if (video) {
+            video.muted = true;
             if (roles[i] === "act") {
-              video.play().catch(() => {}); // автоплей для активного
+              video.play().catch(() => {});
+              // через 2 секунди включаємо звук
+              setTimeout(() => {
+                video.muted = false;
+              }, 2000);
             } else {
               video.pause();
-              video.currentTime = 0; // скидаємо на початок
+              video.currentTime = 0;
             }
-          }
-
-          // Прозорість для li + ::before
-          if (roles[i] === "act") {
-            node.style.setProperty("opacity", "1");
-            node.style.setProperty("--before-opacity", "1");
-          } else if (roles[i] === "prev" || roles[i] === "next") {
-            node.style.setProperty("opacity", "0");
-            node.style.setProperty("--before-opacity", "0.5");
-          } else {
-            node.style.setProperty("opacity", "0");
-            node.style.setProperty("--before-opacity", "0");
           }
         });
       }
 
-      // Переконуємось, що завжди 5 елементів
-      function ensureFive() {
-        nodes = Array.from(list.children);
-        while (nodes.length < 5) {
-          const li = document.createElement("li");
-          list.appendChild(li);
-          nodes.push(li);
-        }
-        while (nodes.length > 5) {
-          const extra = nodes.pop();
-          list.removeChild(extra);
-        }
-        nodes = Array.from(list.children);
-        updateOffset();
-        applyRoles();
-      }
-
-      // Анімація тексту по буквах
+      // Анімація тексту
       function animateText(el) {
         if (!el) return;
         const text = el.textContent;
@@ -401,27 +337,20 @@
         });
       }
 
-      // Запуск анімації тільки для активного слайду
       function updateTextAnimations() {
         nodes.forEach((node) => {
           const textEl = node.querySelector(".text-container p");
           if (!textEl) return;
-          if (node.classList.contains("act")) {
-            animateText(textEl);
-          } else {
-            // скидаємо текст щоб анімація могла запускатися знову
-            textEl.textContent = textEl.textContent;
-          }
+          if (node.classList.contains("act")) animateText(textEl);
+          else textEl.textContent = textEl.textContent;
         });
       }
 
-      // Комбінована функція для ролей + тексту
       function applyRolesWithText() {
         applyRoles();
         updateTextAnimations();
       }
 
-      // Перемикання слайдів
       function next() {
         list.appendChild(nodes.shift());
         nodes = Array.from(list.children);
@@ -439,46 +368,36 @@
         if (!video) return;
         const li = video.closest("li");
         if (!li.classList.contains("act")) return;
-
         if (video.paused) video.play();
         else video.pause();
       });
 
-      // Свайпи через Hammer.js
+      // Свайпи Hammer.js
       if (window.Hammer) {
         const h = new Hammer(list);
         h.get("swipe").set({ direction: Hammer.DIRECTION_ALL });
         h.on("swipeleft", next);
         h.on("swiperight", prev);
-        h.on("swipedown", next); // свайп вниз → наступний слайд
-        h.on("swipeup", prev); // свайп вгору → попередній
+        h.on("swipedown", prev);
+        h.on("swipeup", next);
       }
 
-      // Клавіші ← →
+      // Клавіші
       document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowLeft") prev();
         if (e.key === "ArrowRight") next();
       });
 
-      // Скрол мишкою / мобільний дотик
+      // Скрол
       list.addEventListener("wheel", (e) => {
         if (isScrolling) return;
         isScrolling = true;
-
-        if (e.deltaY > 0) next(); // вниз → наступний
-        else prev(); // вгору → попередній
-
+        if (e.deltaY > 0) next();
+        else prev();
         setTimeout(() => (isScrolling = false), 500);
       });
 
-      // При зміні розміру
-      window.addEventListener("resize", () => {
-        updateOffset();
-        applyRolesWithText();
-      });
-
       // Старт
-      ensureFive();
       applyRolesWithText();
     </script>
   </body>
