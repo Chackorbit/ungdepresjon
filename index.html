@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Carousel — rotate classes (infinite)</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: sans-serif;
+        overflow: hidden;
+        height: 100vh;
+      }
+
+      .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 20px 40px;
+      }
+
+      .header .logo {
+        max-height: 80px;
+        max-width: 500px;
+        height: 100%;
+        width: 100%;
+      }
+
+      .list {
+        position: relative;
+        display: flex;
+        max-width: 600px;
+        width: 100%;
+        height: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        overflow: hidden;
+      }
+
+      .list li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 450px;
+        width: 100%;
+        max-height: 440px;
+        height: 100%;
+        border-radius: 10px;
+        transition: transform 0.6s ease, opacity 0.6s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        text-transform: uppercase;
+        user-select: none;
+      }
+
+      .list li::before {
+        content: "";
+        position: absolute;
+        top: 0px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 269px;
+        max-height: 400px;
+        width: 100%;
+        height: 100%;
+        background: url("./img/Iphone14.png") no-repeat center center;
+        background-size: 100% 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* positions by class */
+      .hide {
+        transform: translateX(-420px) scale(0.7);
+        opacity: 0;
+        z-index: 1;
+      }
+      .prev {
+        transform: translateX(-220px) scale(0.85);
+        opacity: 0.9;
+        z-index: 2;
+        cursor: pointer;
+      }
+      .act {
+        transform: scale(1);
+        opacity: 1;
+        z-index: 3;
+      }
+      .next {
+        transform: translateX(220px) scale(0.85);
+        opacity: 0.9;
+        z-index: 2;
+        cursor: pointer;
+      }
+      .new-next {
+        transform: translateX(420px) scale(0.7);
+        opacity: 0;
+        z-index: 1;
+      }
+
+      .item {
+        position: relative; /* важливо для абсолютного позиціонування відео */
+        max-width: 240px;
+        width: 100%;
+        border-radius: 30px;
+        overflow: hidden;
+      }
+
+      .video-container {
+        max-width: 240px;
+        max-height: 480px;
+        width: 100%; /* ширина екрану всередині телефону */
+        height: 100%; /* висота екрану */
+        overflow: hidden;
+        border-radius: 50px;
+      }
+
+      .video {
+        max-width: 250px;
+        max-height: 420px;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .video img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .btn-container {
+        display: flex;
+        gap: 10px;
+        max-width: 240px;
+        width: 100%;
+        display: flex;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+      }
+      .btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 200px;
+        width: 100%;
+        padding: 15px 5px;
+        background-color: #000000;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .btn img {
+        max-width: 200px;
+        width: 100%;
+      }
+
+      .text-container {
+        position: absolute;
+        max-width: 90%;
+        width: 100%;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 20px;
+        border-radius: 12px;
+
+        /* контраст і фон */
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+
+        /* ефект */
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-align: center;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+
+        /* анімація */
+
+        animation: fadeSlideIn 1s ease-out forwards;
+        background: rgba(0, 0, 0, 0.6);
+      }
+
+      .text-container p {
+        font-size: clamp(20px, 5vw, 20px);
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 0, 0, 0.4);
+      }
+
+      .text-container span {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: bounceIn 0.6s forwards;
+      }
+
+      @keyframes bounceIn {
+        0% {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        50% {
+          opacity: 1;
+          transform: translateY(-10px);
+        }
+        70% {
+          transform: translateY(5px);
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <img class="logo" src="./img/logo.png" alt="logo" />
+    </header>
+    <ul class="list" aria-label="carousel">
+      <li class="hide">
+        <div class="item">
+          <div class="text-container">
+            <p id="animatedText">Testing ensures knowledge transfer.</p>
+          </div>
+
+          <div style="max-height: 420px" class="video-container">
+            <video class="video" playsinline>
+              <source src="./img/Video4.mov" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </li>
+      <li class="prev">
+        <div class="item">
+          <div
+            class="video-container container"
+            style="background-color: #fff; max-height: 420px; height: 380px"
+          >
+            <div class="btn-container">
+              <a href="#" class="btn"> Downloand our pdf </a>
+            </div>
+            <div class="btn-container">
+              <a href="https://globalcaredevelopment.com/about/" class="btn"
+                >Team</a
+              >
+              <a href="https://globalcaredevelopment.com/" class="btn"
+                ><img src="./img/globalCare.png" alt="globalCare"
+              /></a>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="act">
+        <div class="item">
+          <div class="text-container">
+            <p id="animatedText">Communication to kids needs to be VISUAL</p>
+          </div>
+
+          <div style="max-height: 420px" class="video-container">
+            <video class="video" playsinline>
+              <source src="./img/Video1.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </li>
+      <li class="next">
+        <div class="item">
+          <div class="text-container">
+            <p id="animatedText">In a motivating package</p>
+          </div>
+          <div class="video-container">
+            <video class="video" playsinline>
+              <source src="./img/Video2.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </li>
+      <li class="new-next">
+        <div class="item">
+          <div class="text-container">
+            <p id="animatedText">And with the right incentives.</p>
+          </div>
+
+          <div class="video-container">
+            <img
+              style="max-height: 380px"
+              class="video"
+              src="./img/video3.png"
+              alt="img3"
+            />
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <script src="https://hammerjs.github.io/dist/hammer.js"></script>
+
+    <script>
+      const list = document.querySelector(".list");
+      let nodes = Array.from(list.children);
+      const roles = ["hide", "prev", "act", "next", "new-next"];
+      let offset = 220 + 100; // початково: ширина + мінімальна відстань
+      let isScrolling = false; // блокування для колеса миші
+
+      // Оновлюємо відстань між елементами залежно від ширини контейнера
+      function updateOffset() {
+        const liWidth = nodes[0].offsetWidth;
+        const containerWidth = list.offsetWidth;
+        offset = liWidth + Math.min(100, (containerWidth - liWidth * 3) / 2);
+      }
+
+      // Присвоюємо ролі, позиції, масштаб, opacity та керуємо відео
+      function applyRoles() {
+        nodes.forEach((node, i) => {
+          node.className = "";
+          node.classList.add(roles[i]);
+
+          let pos = 0;
+          switch (roles[i]) {
+            case "hide":
+              pos = -2 * offset;
+              break;
+            case "prev":
+              pos = -60;
+              break;
+            case "act":
+              pos = 0;
+              break;
+            case "next":
+              pos = 60;
+              break;
+            case "new-next":
+              pos = 2 * offset;
+              break;
+          }
+
+          const scale = roles[i] === "act" ? 1 : 0.85;
+          //   node.style.transform = `translateX(${pos}px) scale(${scale})`;
+
+          // Відео
+          const video = node.querySelector("video");
+          if (video) {
+            if (roles[i] === "act") video.play().catch(() => {});
+            else video.pause();
+          }
+
+          // Прозорість для самого li + ::before
+          if (roles[i] === "act") {
+            node.style.setProperty("opacity", "1");
+            node.style.setProperty("--before-opacity", "1");
+          } else if (roles[i] === "prev" || roles[i] === "next") {
+            node.style.setProperty("opacity", "0");
+            node.style.setProperty("--before-opacity", "0.5");
+          } else {
+            node.style.setProperty("opacity", "0");
+            node.style.setProperty("--before-opacity", "0");
+          }
+        });
+      }
+
+      // Переконуємось, що завжди 5 елементів
+      function ensureFive() {
+        nodes = Array.from(list.children);
+        while (nodes.length < 5) {
+          const li = document.createElement("li");
+          list.appendChild(li);
+          nodes.push(li);
+        }
+        while (nodes.length > 5) {
+          const extra = nodes.pop();
+          list.removeChild(extra);
+        }
+        nodes = Array.from(list.children);
+        updateOffset();
+        applyRoles();
+      }
+
+      // Перемикання вперед
+      function next() {
+        list.appendChild(nodes.shift());
+        nodes = Array.from(list.children);
+        applyRoles();
+      }
+
+      // Перемикання назад
+      function prev() {
+        list.insertBefore(nodes.pop(), nodes[0]);
+        nodes = Array.from(list.children);
+        applyRoles();
+      }
+
+      // Клік на відео — відтворення/пауза (тільки центральне)
+      list.addEventListener("click", (e) => {
+        const video = e.target.closest("video");
+        if (!video) return;
+        const li = video.closest("li");
+        if (!li.classList.contains("act")) return;
+
+        if (video.paused) video.play();
+        else video.pause();
+      });
+
+      // Свайпи через Hammer.js
+      if (window.Hammer) {
+        const h = new Hammer(list);
+        h.on("swipeleft", next);
+        h.on("swiperight", prev);
+      }
+
+      // Клавіші ← →
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") prev();
+        if (e.key === "ArrowRight") next();
+      });
+
+      // Скрол мишкою
+      list.addEventListener("wheel", (e) => {
+        if (isScrolling) return; // блокуємо повтори
+        isScrolling = true;
+
+        if (e.deltaY > 0) {
+          // вниз → вперед
+          prev();
+        } else {
+          next();
+          // вгору → назад
+        }
+
+        setTimeout(() => (isScrolling = false), 500); // розблокування через 0.5s
+      });
+
+      // При зміні розміру екрану адаптивно оновлюємо відстань і ролі
+      window.addEventListener("resize", () => {
+        updateOffset();
+        applyRoles();
+      });
+
+      ensureFive();
+
+      function animateText(el) {
+        if (!el) return;
+        const text = el.textContent;
+        el.textContent = ""; // очистка
+        text.split("").forEach((char, i) => {
+          const span = document.createElement("span");
+          span.textContent = char === " " ? "\u00A0" : char;
+          span.style.animation = "bounceIn 0.6s forwards";
+          span.style.animationDelay = `${i * 0.05}s`;
+          el.appendChild(span);
+        });
+      }
+
+      // Функція для оновлення активного слайду і запуску анімацій
+      function updateTextAnimations() {
+        nodes.forEach((node) => {
+          const textEl = node.querySelector(".text-container p");
+          if (!textEl) return;
+          if (node.classList.contains("act")) {
+            animateText(textEl);
+          } else {
+            // скидаємо текст, щоб анімація могла запускатися знову
+            textEl.textContent = textEl.textContent;
+          }
+        });
+      }
+
+      // Оновлюємо ролі і текстові анімації разом
+      function applyRolesWithText() {
+        applyRoles(); // існуюча функція для позицій
+        updateTextAnimations(); // нова функція для анімації тексту
+      }
+
+      // Замінюємо виклики applyRoles() у next/prev
+      function next() {
+        list.appendChild(nodes.shift());
+        nodes = Array.from(list.children);
+        applyRolesWithText();
+      }
+
+      function prev() {
+        list.insertBefore(nodes.pop(), nodes[0]);
+        nodes = Array.from(list.children);
+        applyRolesWithText();
+      }
+
+      // При старті
+      ensureFive();
+      applyRolesWithText(); // анімація для початкового активного слайду
+    </script>
+  </body>
+</html>
