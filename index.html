@@ -254,7 +254,7 @@
           </div>
 
           <div style="max-height: 420px" class="video-container">
-            <video class="video" playsinline autoplay>
+            <video class="video" playsinline>
               <source src="./img/Video4.mov" type="video/mp4" />
             </video>
           </div>
@@ -287,7 +287,7 @@
           </div>
 
           <div style="max-height: 420px" class="video-container">
-            <video class="video" playsinline autoplay>
+            <video class="video" playsinline autoplay muted loop>
               <source src="./img/Video1.mp4" type="video/mp4" />
             </video>
           </div>
@@ -299,7 +299,7 @@
             <p id="animatedText">In a motivating package</p>
           </div>
           <div class="video-container">
-            <video class="video" playsinline autoplay>
+            <video class="video" playsinline>
               <source src="./img/Video2.mp4" type="video/mp4" />
             </video>
           </div>
@@ -329,10 +329,10 @@
       const list = document.querySelector(".list");
       let nodes = Array.from(list.children);
       const roles = ["hide", "prev", "act", "next", "new-next"];
-      let offset = 220 + 100; // початково: ширина + мінімальна відстань
-      let isScrolling = false; // блокування для колеса миші
+      let offset = 220 + 100;
+      let isScrolling = false;
 
-      // Оновлюємо відстань між елементами залежно від ширини контейнера
+      // Оновлюємо відстань між елементами
       function updateOffset() {
         const liWidth = nodes[0].offsetWidth;
         const containerWidth = list.offsetWidth;
@@ -345,36 +345,18 @@
           node.className = "";
           node.classList.add(roles[i]);
 
-          let pos = 0;
-          switch (roles[i]) {
-            case "hide":
-              pos = -2 * offset;
-              break;
-            case "prev":
-              pos = -60;
-              break;
-            case "act":
-              pos = 0;
-              break;
-            case "next":
-              pos = 60;
-              break;
-            case "new-next":
-              pos = 2 * offset;
-              break;
-          }
-
-          const scale = roles[i] === "act" ? 1 : 0.85;
-          //   node.style.transform = `translateX(${pos}px) scale(${scale})`;
-
           // Відео
           const video = node.querySelector("video");
           if (video) {
-            if (roles[i] === "act") video.play().catch(() => {});
-            else video.pause();
+            if (roles[i] === "act") {
+              video.play().catch(() => {}); // автоплей для активного
+            } else {
+              video.pause();
+              video.currentTime = 0; // скидаємо на початок
+            }
           }
 
-          // Прозорість для самого li + ::before
+          // Прозорість для li + ::before
           if (roles[i] === "act") {
             node.style.setProperty("opacity", "1");
             node.style.setProperty("--before-opacity", "1");
@@ -405,21 +387,53 @@
         applyRoles();
       }
 
-      // Перемикання вперед
+      // Анімація тексту по буквах
+      function animateText(el) {
+        if (!el) return;
+        const text = el.textContent;
+        el.textContent = "";
+        text.split("").forEach((char, i) => {
+          const span = document.createElement("span");
+          span.textContent = char === " " ? "\u00A0" : char;
+          span.style.animation = "bounceIn 0.6s forwards";
+          span.style.animationDelay = `${i * 0.05}s`;
+          el.appendChild(span);
+        });
+      }
+
+      // Запуск анімації тільки для активного слайду
+      function updateTextAnimations() {
+        nodes.forEach((node) => {
+          const textEl = node.querySelector(".text-container p");
+          if (!textEl) return;
+          if (node.classList.contains("act")) {
+            animateText(textEl);
+          } else {
+            // скидаємо текст щоб анімація могла запускатися знову
+            textEl.textContent = textEl.textContent;
+          }
+        });
+      }
+
+      // Комбінована функція для ролей + тексту
+      function applyRolesWithText() {
+        applyRoles();
+        updateTextAnimations();
+      }
+
+      // Перемикання слайдів
       function next() {
         list.appendChild(nodes.shift());
         nodes = Array.from(list.children);
-        applyRoles();
+        applyRolesWithText();
       }
-
-      // Перемикання назад
       function prev() {
         list.insertBefore(nodes.pop(), nodes[0]);
         nodes = Array.from(list.children);
-        applyRoles();
+        applyRolesWithText();
       }
 
-      // Клік на відео — відтворення/пауза (тільки центральне)
+      // Клік на відео
       list.addEventListener("click", (e) => {
         const video = e.target.closest("video");
         if (!video) return;
@@ -433,8 +447,11 @@
       // Свайпи через Hammer.js
       if (window.Hammer) {
         const h = new Hammer(list);
+        h.get("swipe").set({ direction: Hammer.DIRECTION_ALL });
         h.on("swipeleft", next);
         h.on("swiperight", prev);
+        h.on("swipedown", next); // свайп вниз → наступний слайд
+        h.on("swipeup", prev); // свайп вгору → попередній
       }
 
       // Клавіші ← →
@@ -443,79 +460,26 @@
         if (e.key === "ArrowRight") next();
       });
 
-      // Скрол мишкою
+      // Скрол мишкою / мобільний дотик
       list.addEventListener("wheel", (e) => {
-        if (isScrolling) return; // блокуємо повтори
+        if (isScrolling) return;
         isScrolling = true;
 
-        if (e.deltaY > 0) {
-          // вниз → вперед
-          prev();
-        } else {
-          next();
-          // вгору → назад
-        }
+        if (e.deltaY > 0) next(); // вниз → наступний
+        else prev(); // вгору → попередній
 
-        setTimeout(() => (isScrolling = false), 500); // розблокування через 0.5s
+        setTimeout(() => (isScrolling = false), 500);
       });
 
-      // При зміні розміру екрану адаптивно оновлюємо відстань і ролі
+      // При зміні розміру
       window.addEventListener("resize", () => {
         updateOffset();
-        applyRoles();
+        applyRolesWithText();
       });
 
+      // Старт
       ensureFive();
-
-      function animateText(el) {
-        if (!el) return;
-        const text = el.textContent;
-        el.textContent = ""; // очистка
-        text.split("").forEach((char, i) => {
-          const span = document.createElement("span");
-          span.textContent = char === " " ? "\u00A0" : char;
-          span.style.animation = "bounceIn 0.6s forwards";
-          span.style.animationDelay = `${i * 0.05}s`;
-          el.appendChild(span);
-        });
-      }
-
-      // Функція для оновлення активного слайду і запуску анімацій
-      function updateTextAnimations() {
-        nodes.forEach((node) => {
-          const textEl = node.querySelector(".text-container p");
-          if (!textEl) return;
-          if (node.classList.contains("act")) {
-            animateText(textEl);
-          } else {
-            // скидаємо текст, щоб анімація могла запускатися знову
-            textEl.textContent = textEl.textContent;
-          }
-        });
-      }
-
-      // Оновлюємо ролі і текстові анімації разом
-      function applyRolesWithText() {
-        applyRoles(); // існуюча функція для позицій
-        updateTextAnimations(); // нова функція для анімації тексту
-      }
-
-      // Замінюємо виклики applyRoles() у next/prev
-      function next() {
-        list.appendChild(nodes.shift());
-        nodes = Array.from(list.children);
-        applyRolesWithText();
-      }
-
-      function prev() {
-        list.insertBefore(nodes.pop(), nodes[0]);
-        nodes = Array.from(list.children);
-        applyRolesWithText();
-      }
-
-      // При старті
-      ensureFive();
-      applyRolesWithText(); // анімація для початкового активного слайду
+      applyRolesWithText();
     </script>
   </body>
 </html>
