@@ -308,14 +308,19 @@
 
           const video = node.querySelector("video");
           if (video) {
-            video.muted = true;
+            // Якщо це активний слайд
             if (roles[i] === "act") {
-              video.play().catch(() => {});
-              // через 2 секунди включаємо звук
-              setTimeout(() => {
-                video.muted = false;
-              }, 2000);
+              // Якщо відео ще не грає, запускаємо
+              if (video.paused) {
+                video.muted = true;
+                video.play().catch(() => {});
+                // Через 2 секунди включаємо звук
+                setTimeout(() => {
+                  video.muted = false;
+                }, 2000);
+              }
             } else {
+              // Якщо це не активний, ставимо на паузу
               video.pause();
               video.currentTime = 0;
             }
