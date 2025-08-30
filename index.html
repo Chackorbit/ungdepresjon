@@ -233,6 +233,7 @@
         text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
         animation: fadeSlideIn 1s ease-out forwards;
         opacity: 0;
+        transition: opacity 0.5s ease;
       }
 
       .text-container p {
@@ -431,7 +432,7 @@
           </div>
           <div class="video-container">
             <video class="video" playsinline autoplay muted loop>
-              <source src="./img/Video1.mp4" type="video/mp4" />
+              <source src="./img/Video1Mobile.mp4" type="video/mp4" />
             </video>
           </div>
         </div>
@@ -469,6 +470,8 @@
     <script src="https://hammerjs.github.io/dist/hammer.js"></script>
     <script>
       const list = document.querySelector(".list");
+      const textContainer = document.querySelector(".text-container");
+
       let nodes = Array.from(list.children);
       const roles = ["hide", "prev", "act", "next", "new-next"];
       let isScrolling = false;
@@ -498,16 +501,16 @@
       function animateText(el) {
         if (!el) return;
 
-        // Розбиваємо на рядки за <br>
+        // Контейнер стає видимим
+        el.style.opacity = 1;
+
+        // Розбиваємо на рядки по <br>
         const html = el.innerHTML;
         const lines = html.split(/<br\s*\/?>/i);
         el.textContent = ""; // очищуємо вміст
 
         lines.forEach((line, lineIndex) => {
-          // Замінюємо повторювані пробіли на один
-          line = line.replace(/\s+/g, " ").trim();
-
-          // Розбиваємо рядок на слова
+          line = line.replace(/\s+/g, " ").trim(); // повторювані пробіли → 1
           const words = line.split(" ");
 
           words.forEach((word, wordIndex) => {
@@ -515,30 +518,37 @@
             span.textContent = word;
             span.style.display = "inline-block";
             span.style.opacity = 0;
-            span.style.animation = "slideInLeft 0.5s forwards";
-            // Анімація з затримкою: слово * 0.15s
+            span.style.animation = `slideInLeft 0.5s forwards`;
             span.style.animationDelay = `${wordIndex * 0.15}s`;
             el.appendChild(span);
 
-            // Додаємо пробіл після слова, якщо це не останнє слово
             if (wordIndex < words.length - 1) {
               el.appendChild(document.createTextNode(" "));
             }
           });
 
-          // Додаємо <br> назад, якщо це не останній рядок
           if (lineIndex < lines.length - 1) {
             el.appendChild(document.createElement("br"));
           }
         });
+      }
+      function textContFunc(el) {
+        if (!el) return;
+        el.style.opacity = "1"; // робимо видимим
+        console.log("textContainer: ", el);
       }
 
       function updateTextAnimations() {
         nodes.forEach((node) => {
           const textEl = node.querySelector(".text-container p");
           if (!textEl) return;
-          if (node.classList.contains("act")) animateText(textEl);
-          else textEl.textContent = textEl.textContent;
+
+          if (node.classList.contains("act")) {
+            animateText(textEl);
+            textContFunc(node.querySelector(".text-container")); // передаємо контейнер
+          } else {
+            textEl.textContent = textEl.textContent;
+          }
         });
       }
 
