@@ -10,10 +10,13 @@
         margin: 0;
         padding: 0;
       }
+      html,
       body {
-        font-family: sans-serif;
-        overflow: hidden;
+        margin: 0;
+        padding: 0;
         height: 100vh;
+        width: 100%;
+        overflow: hidden;
       }
 
       .header {
@@ -24,7 +27,7 @@
         padding: 20px 40px;
       }
       .header .logo {
-        max-height: 80px;
+        max-height: 80px !important;
         max-width: 500px;
         height: 100%;
         width: 100%;
@@ -38,6 +41,7 @@
         height: 100%;
         margin: auto;
         overflow: hidden;
+        box-sizing: border-box;
       }
       .list li {
         display: flex;
@@ -50,8 +54,7 @@
         transform: translateX(-50%);
         max-width: 426px;
         width: 100%;
-        max-height: 884px;
-        height: 100%;
+        height: 90vh;
         border-radius: 10px;
         transition: transform 0.6s ease, opacity 0.6s ease;
         color: #fff;
@@ -68,7 +71,7 @@
         left: 50%;
         transform: translateX(-50%);
         width: 100%;
-        height: auto;
+        height: 100%;
         aspect-ratio: 426 / 884;
         background: url("./img/Group55.png") no-repeat center center;
         background-size: contain;
@@ -136,6 +139,8 @@
         overflow: hidden;
       }
       .video-container {
+        display: flex;
+        justify-content: center;
         max-width: 426px;
         max-height: 884px;
         width: 100%;
@@ -183,18 +188,18 @@
         align-items: center;
         max-width: 280px;
         width: 100%;
-        padding: 35px 5px;
+        padding: 25px 5px;
         background-color: #000;
         color: #fff;
         text-decoration: none;
-        border-radius: 5px;
+        border-radius: 10px;
         font-size: 12px;
         text-align: center;
         transition: background-color 0.3s ease;
       }
 
       .btn-small {
-        padding: 25px 5px;
+        padding: 15px 5px;
         font-size: 10px;
       }
 
@@ -227,6 +232,7 @@
         text-align: center;
         text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
         animation: fadeSlideIn 1s ease-out forwards;
+        opacity: 0;
       }
 
       .text-container p {
@@ -280,7 +286,6 @@
       }
 
       .video {
-        width: 100%;
         height: 100%;
         object-fit: cover; /* підлаштовує відео під контейнер */
       }
@@ -301,6 +306,46 @@
         opacity: 0;
         transform: translateX(-30px);
         animation: slideInLeft 0.5s forwards;
+      }
+
+      .list {
+        max-width: 100%;
+        height: 100%;
+      }
+      .list li {
+        max-width: 280px;
+        max-height: 640px;
+        height: 100%;
+        border-radius: 50px;
+      }
+      .list li::before {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 426 / 884;
+      }
+      .video-container {
+        max-width: 320px;
+        max-height: 640px;
+        height: 100%;
+        border-radius: 50px;
+        overflow: hidden;
+      }
+      .video {
+        max-width: 314px;
+        max-height: 580px;
+        height: 100%;
+        width: 100%;
+        border-radius: 50px;
+      }
+
+      .prev {
+        transform: translateX(-300px) scale(0.85) !important;
+        opacity: 0.5;
+        z-index: 2;
+      }
+
+      .container {
+        padding-bottom: 100px !important;
       }
 
       @media screen and (max-width: 480px) {
@@ -330,6 +375,7 @@
           max-width: 314px;
           max-height: 580px;
           height: 100%;
+          width: 100%;
           border-radius: 50px;
         }
 
@@ -392,7 +438,12 @@
       </li>
       <li class="next">
         <div class="item">
-          <div class="text-container"><p>In a motivating package</p></div>
+          <div class="text-container">
+            <p>
+              In a motivating <br />
+              package
+            </p>
+          </div>
           <div class="video-container">
             <video class="video" playsinline>
               <source src="./img/Video2.mp4" type="video/mp4" />
@@ -446,13 +497,39 @@
 
       function animateText(el) {
         if (!el) return;
-        const text = el.textContent;
-        el.textContent = "";
-        text.split("").forEach((char, i) => {
-          const span = document.createElement("span");
-          span.textContent = char === " " ? "\u00A0" : char;
-          span.style.animationDelay = `${i * 0.03}s`; // затримка по символах
-          el.appendChild(span);
+
+        // Розбиваємо на рядки за <br>
+        const html = el.innerHTML;
+        const lines = html.split(/<br\s*\/?>/i);
+        el.textContent = ""; // очищуємо вміст
+
+        lines.forEach((line, lineIndex) => {
+          // Замінюємо повторювані пробіли на один
+          line = line.replace(/\s+/g, " ").trim();
+
+          // Розбиваємо рядок на слова
+          const words = line.split(" ");
+
+          words.forEach((word, wordIndex) => {
+            const span = document.createElement("span");
+            span.textContent = word;
+            span.style.display = "inline-block";
+            span.style.opacity = 0;
+            span.style.animation = "slideInLeft 0.5s forwards";
+            // Анімація з затримкою: слово * 0.15s
+            span.style.animationDelay = `${wordIndex * 0.15}s`;
+            el.appendChild(span);
+
+            // Додаємо пробіл після слова, якщо це не останнє слово
+            if (wordIndex < words.length - 1) {
+              el.appendChild(document.createTextNode(" "));
+            }
+          });
+
+          // Додаємо <br> назад, якщо це не останній рядок
+          if (lineIndex < lines.length - 1) {
+            el.appendChild(document.createElement("br"));
+          }
         });
       }
 
