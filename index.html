@@ -92,7 +92,7 @@
 
       .prev {
         transform: translateX(-500px) scale(0.85) !important;
-        opacity: 0.5;
+        opacity: 1;
         z-index: 2;
       }
       /* активний */
@@ -104,7 +104,7 @@
       /* правий видимий */
       .next {
         transform: translateX(80px) scale(0.85) !important;
-        opacity: 0.5;
+        opacity: 01;
         z-index: 2;
       }
       /* невидимий справа */
@@ -218,11 +218,11 @@
 
       .text-container {
         position: absolute;
-        max-width: 90%;
+        max-width: 500px;
         width: 100%;
-        top: 70px;
-        left: 50%;
-        transform: translateX(-50%);
+        bottom: 150px;
+        /* left: 50%;
+        transform: translateX(-50%); */
         padding: 15px 25px;
         border-radius: 12px;
         background: rgba(0, 0, 0, 0.6);
@@ -234,6 +234,7 @@
         animation: fadeSlideIn 1s ease-out forwards;
         opacity: 0;
         transition: opacity 0.5s ease;
+        z-index: 5;
       }
 
       .text-container p {
@@ -341,7 +342,7 @@
 
       .prev {
         transform: translateX(-300px) scale(0.85) !important;
-        opacity: 0.5;
+        opacity: 1;
         z-index: 2;
       }
 
@@ -382,7 +383,7 @@
 
         .prev {
           transform: translateX(-300px) scale(0.85) !important;
-          opacity: 0.5;
+          opacity: 1;
           z-index: 2;
         }
       }
@@ -394,42 +395,11 @@
     </header>
 
     <ul class="list" aria-label="carousel">
-      <li class="hide">
-        <div class="item">
-          <div class="text-container">
-            <p>Testing ensures knowledge transfer.</p>
-          </div>
-          <div class="video-container">
-            <video class="video" playsinline>
-              <source src="./img/Video4.mov" type="video/mp4" />
-            </video>
-          </div>
-        </div>
-      </li>
-      <li class="prev">
-        <div class="item">
-          <div class="video-container container" style="background-color: #fff">
-            <div class="btn-container">
-              <a href="#" class="btn">Download our pdf</a>
-            </div>
-            <div class="btn-container">
-              <a
-                href="https://globalcaredevelopment.com/about/"
-                class="btn btn-small"
-                >Team</a
-              >
-              <a href="https://globalcaredevelopment.com/" class="btn btn-small"
-                ><img src="./img/globalCare.png" alt="globalCare"
-              /></a>
-            </div>
-          </div>
-        </div>
-      </li>
       <li class="act">
+        <div class="text-container">
+          <p>Communication to kids needs to be VISUAL</p>
+        </div>
         <div class="item">
-          <div class="text-container">
-            <p>Communication to kids needs to be VISUAL</p>
-          </div>
           <div class="video-container">
             <video class="video" playsinline autoplay muted loop>
               <source src="./img/Video1Mobile.mp4" type="video/mp4" />
@@ -465,6 +435,39 @@
           </div>
         </div>
       </li>
+
+      <li class="hide">
+        <div class="item">
+          <div class="text-container">
+            <p>Testing ensures knowledge transfer.</p>
+          </div>
+          <div class="video-container">
+            <video class="video" playsinline>
+              <source src="./img/Video4.mov" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </li>
+
+      <li class="prev">
+        <div class="item">
+          <div class="video-container container" style="background-color: #fff">
+            <div class="btn-container">
+              <a href="#" class="btn">Download our pdf</a>
+            </div>
+            <div class="btn-container">
+              <a
+                href="https://globalcaredevelopment.com/about/"
+                class="btn btn-small"
+                >Team</a
+              >
+              <a href="https://globalcaredevelopment.com/" class="btn btn-small"
+                ><img src="./img/globalCare.png" alt="globalCare"
+              /></a>
+            </div>
+          </div>
+        </div>
+      </li>
     </ul>
 
     <script src="https://hammerjs.github.io/dist/hammer.js"></script>
@@ -474,21 +477,28 @@
 
       let nodes = Array.from(list.children);
       const roles = ["hide", "prev", "act", "next", "new-next"];
+      let currentIndex = 0; // поточний слайд
+      let maxSeenIndex = 0; // найвіддаленіший слайд, який бачив користувач
       let isScrolling = false;
 
       // Присвоюємо ролі та керуємо відео
       function applyRoles() {
         nodes.forEach((node, i) => {
           node.className = "";
-          node.classList.add(roles[i]);
 
+          if (i < currentIndex) node.classList.add("prev");
+          else if (i === currentIndex) node.classList.add("act");
+          else if (i === currentIndex + 1) node.classList.add("next");
+          else node.classList.add("hide");
+
+          // Керування відео
           const video = node.querySelector("video");
           if (video) {
-            if (roles[i] === "act") {
+            if (i === currentIndex) {
               if (video.paused) {
                 video.muted = true;
                 video.play().catch(() => {});
-                setTimeout(() => (video.muted = false), 2000);
+                setTimeout(() => (video.muted = false), 1000);
               }
             } else {
               video.pause();
@@ -497,7 +507,6 @@
           }
         });
       }
-
       function animateText(el) {
         if (!el) return;
 
@@ -532,6 +541,7 @@
           }
         });
       }
+
       function textContFunc(el) {
         if (!el) return;
         el.style.opacity = "1"; // робимо видимим
@@ -559,15 +569,20 @@
 
       // Логіка свайпу: просто крутимо масив ролей
       function next() {
-        roles.push(roles.shift()); // перший елемент ролі на кінець
-        applyRolesWithText();
+        if (currentIndex < nodes.length - 1) {
+          currentIndex++;
+          maxSeenIndex = Math.max(maxSeenIndex, currentIndex); // оновлюємо
+          applyRolesWithText();
+        }
       }
 
       function prev() {
-        roles.unshift(roles.pop()); // останній елемент ролі на початок
-        applyRolesWithText();
+        // Дозволяємо назад тільки якщо користувач бачив цей слайд
+        if (currentIndex > 0 && currentIndex <= maxSeenIndex) {
+          currentIndex--;
+          applyRolesWithText();
+        }
       }
-
       // Клік на відео
       list.addEventListener("click", (e) => {
         const video = e.target.closest("video");
@@ -594,14 +609,49 @@
         if (e.key === "ArrowRight") next();
       });
 
-      // Скрол
-      list.addEventListener("wheel", (e) => {
-        if (isScrolling) return;
-        isScrolling = true;
-        if (e.deltaY > 0) next();
-        else prev();
-        setTimeout(() => (isScrolling = false), 500);
-      });
+      // scroll (wheel control)
+      const scrollDelay = 700; // час між скролами (≈ тривалість анімації)
+      let accumulatedDelta = 0;
+
+      list.addEventListener(
+        "wheel",
+        (e) => {
+          e.preventDefault();
+
+          if (isScrolling) return;
+
+          const absDelta = Math.abs(e.deltaY);
+
+          // ---- 🖱 МИШКА (великі значення) ----
+          if (absDelta >= 100) {
+            isScrolling = true;
+            if (e.deltaY > 0) next();
+            else prev();
+
+            setTimeout(() => {
+              isScrolling = false;
+            }, scrollDelay);
+            return;
+          }
+
+          // ---- 🖐 ТАЧПАД (дрібні значення, накопичуємо) ----
+          accumulatedDelta += e.deltaY;
+
+          if (Math.abs(accumulatedDelta) > 60) {
+            isScrolling = true;
+
+            if (accumulatedDelta > 0) next();
+            else prev();
+
+            accumulatedDelta = 0;
+
+            setTimeout(() => {
+              isScrolling = false;
+            }, scrollDelay);
+          }
+        },
+        { passive: false }
+      );
 
       // Старт
       applyRolesWithText();
