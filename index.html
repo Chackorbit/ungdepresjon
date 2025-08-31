@@ -205,7 +205,7 @@
         max-height: 874px;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         display: block;
         border-radius: 70px;
       }
@@ -444,7 +444,7 @@
         overflow: hidden;
       }
       .video {
-        max-width: 314px;
+        max-width: 270px;
         max-height: 580px;
         height: 100%;
         width: 100%;
@@ -502,7 +502,7 @@
           overflow: hidden;
         }
         .video {
-          max-width: 314px;
+          max-width: 270px;
           max-height: 580px;
           height: 100%;
           width: 100%;
@@ -582,28 +582,6 @@
           </div>
         </div>
       </li>
-
-      <!--
-      <li class="prev">
-        <div class="item">
-          <div class="video-container container" style="background-color: #fff">
-            <div class="btn-container">
-              <a href="#" class="btn">Download our pdf</a>
-            </div>
-            <div class="btn-container">
-              <a
-                href="https://globalcaredevelopment.com/about/"
-                class="btn btn-small"
-                >Team</a
-              >
-              <a href="https://globalcaredevelopment.com/" class="btn btn-small"
-                ><img src="./img/globalCare.png" alt="globalCare"
-              /></a>
-            </div>
-          </div>
-        </div>
-      </li>
-      -->
     </ul>
 
     <div class="btn-wrapper">
@@ -639,7 +617,6 @@
         let accumulatedDelta = 0;
         let pageScrollTimeout = null;
 
-        // Intro video
         const intro = document.getElementById("intro");
         const introVideo = document.getElementById("introVideo");
         if (intro && introVideo) {
@@ -657,8 +634,8 @@
           }, 9000);
         }
 
-        const mobileSrc = "./img/GDCRedirectMobile.mp4"; // мобільне відео
-        const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4"; // десктопне відео
+        const mobileSrc = "./img/GDCRedirectMobile.mp4";
+        const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4";
 
         function updateVideoSource() {
           const isMobile = window.innerWidth <= 700;
@@ -680,7 +657,6 @@
         updateVideoSource();
         window.addEventListener("resize", updateVideoSource);
 
-        // --- Функції для каруселі ---
         function applyRoles() {
           nodes.forEach((node, i) => {
             node.className = "";
@@ -705,46 +681,39 @@
         function animateText(el) {
           if (!el) return;
 
-          // 1. Зберігаємо HTML
           const html = el.innerHTML;
 
-          // 2. Очищаємо текст контейнера
           el.textContent = "";
 
-          // 3. Контейнер на місці, але невидимий
           el.style.opacity = 0;
           el.style.transition = "opacity 0.8s ease";
 
-          // 4. Fade-in контейнера
           requestAnimationFrame(() => {
             el.style.opacity = 1;
           });
 
-          // 5. Починаємо анімацію тексту після появи контейнера
-          setTimeout(() => {
-            const lines = html.split(/<br\s*\/?>/i);
-            lines.forEach((line, lineIndex) => {
-              line = line.replace(/\s+/g, " ").trim();
-              const words = line.split(" ");
+          const lines = html.split(/<br\s*\/?>/i);
+          lines.forEach((line, lineIndex) => {
+            line = line.replace(/\s+/g, " ").trim();
+            const words = line.split(" ");
 
-              words.forEach((word, wordIndex) => {
-                const span = document.createElement("span");
-                span.textContent = word;
-                span.style.display = "inline-block";
-                span.style.opacity = 0;
-                span.style.animation = `slideInLeft 0.6s forwards`;
-                span.style.animationDelay = `${
-                  wordIndex * 0.15 + lineIndex * 0.3
-                }s`;
-                el.appendChild(span);
-                if (wordIndex < words.length - 1)
-                  el.appendChild(document.createTextNode(" "));
-              });
-
-              if (lineIndex < lines.length - 1)
-                el.appendChild(document.createElement("br"));
+            words.forEach((word, wordIndex) => {
+              const span = document.createElement("span");
+              span.textContent = word;
+              span.style.display = "inline-block";
+              span.style.opacity = 0;
+              span.style.animation = `slideInLeft 2s forwards`;
+              span.style.animationDelay = `${
+                wordIndex * 0.15 + lineIndex * 0.3
+              }s`;
+              el.appendChild(span);
+              if (wordIndex < words.length - 1)
+                el.appendChild(document.createTextNode(" "));
             });
-          }, 850); // чекаємо майже кінець fade-in
+
+            if (lineIndex < lines.length - 1)
+              el.appendChild(document.createElement("br"));
+          });
         }
 
         function applyRolesWithText() {
@@ -777,9 +746,6 @@
           }
         }
 
-        // Wheel event
-        // Навігація
-
         list.addEventListener(
           "wheel",
           (e) => {
@@ -791,7 +757,6 @@
               return;
             }
 
-            // --- Якщо ще є next слайди (НЕ останній слайд) ---
             if (hasNextSlides) {
               e.preventDefault();
               accumulatedDelta += delta;
@@ -801,13 +766,12 @@
                 next();
                 accumulatedDelta = 0;
 
-                // коли перейшли на останній слайд → ставимо затримку на дозвіл скролу
                 if (!list.querySelector(".next")) {
                   clearTimeout(pageScrollTimeout);
                   allowPageScroll = false;
                   pageScrollTimeout = setTimeout(() => {
                     allowPageScroll = true;
-                  }, 1000); // 1 секунда пауза
+                  }, 1000);
                 }
 
                 setTimeout(() => (isScrolling = false), scrollDelay);
@@ -820,17 +784,15 @@
               return;
             }
 
-            // --- Якщо next більше немає (останній слайд) ---
             if (!hasNextSlides) {
               const btnWrapper = document.querySelector(".btn-wrapper");
               if (btnWrapper) {
-                btnWrapper.style.display = "flex"; // показуємо кнопки
+                btnWrapper.style.display = "flex";
               }
 
               if (delta > 0) {
-                // скрол вниз
                 if (!allowPageScroll) {
-                  e.preventDefault(); // блокуємо, поки не пройшла пауза
+                  e.preventDefault();
                   return;
                 }
                 const btnWrapper = document.querySelector(".btn-wrapper");
@@ -838,7 +800,6 @@
                   btnWrapper.scrollIntoView({ behavior: "smooth" });
                 }
               } else if (delta < 0 && window.scrollY === 0) {
-                // скрол вверх
                 e.preventDefault();
                 isScrolling = true;
                 prev();
@@ -849,7 +810,6 @@
           { passive: false }
         );
 
-        // Клік на відео
         list.addEventListener("click", (e) => {
           const video = e.target.closest("video");
           if (!video) return;
@@ -858,14 +818,28 @@
           video.paused ? video.play() : video.pause();
         });
 
-        // Клавіші
+        if (window.Hammer) {
+          const h = new Hammer(list);
+          h.get("swipe").set({ direction: Hammer.DIRECTION_ALL });
+          h.on("swipeleft", next);
+          h.on("swiperight", prev);
+          h.on("swipedown", prev);
+          h.on("swipeup", next);
+        }
+
         document.addEventListener("keydown", (e) => {
           if (e.key === "ArrowLeft") prev();
           if (e.key === "ArrowRight") next();
         });
 
-        // Ініціалізація
         applyRolesWithText();
+      });
+
+      window.addEventListener("load", () => {
+        const firstText = document.querySelector(
+          ".list li.act .text-container p"
+        );
+        if (firstText) animateText(firstText);
       });
     </script>
   </body>
