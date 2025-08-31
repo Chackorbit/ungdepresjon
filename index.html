@@ -12,11 +12,13 @@
       }
       html,
       body {
+        position: relative;
         margin: 0;
         padding: 0;
-        height: 100vh;
+        height: 100%;
         width: 100%;
         overflow: hidden;
+        overflow-y: auto;
       }
 
       .header {
@@ -26,6 +28,7 @@
         width: 100%;
         padding: 20px 40px;
       }
+
       .header .logo {
         max-height: 80px !important;
         max-width: 500px;
@@ -37,6 +40,7 @@
         position: relative;
         display: flex;
         max-width: 600px;
+        max-height: 700px;
         width: 100%;
         height: 100%;
         margin: auto;
@@ -116,14 +120,14 @@
 
       /* плавний перехід */
       .list li {
-        transition: transform 0.6s ease, opacity 0.6s ease;
+        transition: transform 1.5s ease, opacity 1.5s ease;
       }
 
       .list li.slide-left {
-        animation: slideOutLeft 0.6s forwards;
+        animation: slideOutLeft 1.5s forwards;
       }
       .list li.slide-right {
-        animation: slideOutRight 0.6s forwards;
+        animation: slideOutRight 1.5s forwards;
       }
 
       /* позиції */
@@ -162,6 +166,17 @@
         height: 100%;
         object-fit: cover;
         display: block;
+      }
+
+      .btn-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 20px 0;
+        background-color: #fff;
+        position: relative;
+        z-index: 10;
       }
 
       .container {
@@ -218,12 +233,12 @@
 
       .text-container {
         position: absolute;
-        max-width: 500px;
-        width: 100%;
+        max-width: 900px;
+        width: 950px;
         bottom: 150px;
         /* left: 50%;
         transform: translateX(-50%); */
-        padding: 15px 25px;
+        padding: 35px 25px;
         border-radius: 12px;
         background: rgba(0, 0, 0, 0.6);
         color: #fff;
@@ -237,8 +252,12 @@
         z-index: 5;
       }
 
+      .act .text-container {
+        opacity: 1;
+      }
+
       .text-container p {
-        font-size: clamp(16px, 5vw, 20px);
+        font-size: clamp(16px, 5vw, 36px);
         text-shadow: 0 0 5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 0, 0, 0.4);
       }
       .text-container span {
@@ -342,8 +361,11 @@
 
       .prev {
         transform: translateX(-300px) scale(0.85) !important;
-        opacity: 1;
+        opacity: 0.5;
         z-index: 2;
+      }
+      .next {
+        opacity: 0.5;
       }
 
       .container {
@@ -408,13 +430,13 @@
         </div>
       </li>
       <li class="next">
+        <div class="text-container">
+          <p>
+            In a motivating <br />
+            package
+          </p>
+        </div>
         <div class="item">
-          <div class="text-container">
-            <p>
-              In a motivating <br />
-              package
-            </p>
-          </div>
           <div class="video-container">
             <video class="video" playsinline>
               <source src="./img/Video2.mp4" type="video/mp4" />
@@ -423,13 +445,13 @@
         </div>
       </li>
       <li class="new-next">
+        <div class="text-container">
+          <p>
+            And with the right <br />
+            incentives.
+          </p>
+        </div>
         <div class="item">
-          <div class="text-container">
-            <p>
-              And with the right <br />
-              incentives.
-            </p>
-          </div>
           <div class="video-container">
             <img class="video" src="./img/video3.png" alt="img3" />
           </div>
@@ -437,10 +459,10 @@
       </li>
 
       <li class="hide">
+        <div class="text-container">
+          <p>Testing ensures knowledge transfer.</p>
+        </div>
         <div class="item">
-          <div class="text-container">
-            <p>Testing ensures knowledge transfer.</p>
-          </div>
           <div class="video-container">
             <video class="video" playsinline>
               <source src="./img/Video4.mov" type="video/mp4" />
@@ -449,6 +471,7 @@
         </div>
       </li>
 
+      <!--
       <li class="prev">
         <div class="item">
           <div class="video-container container" style="background-color: #fff">
@@ -468,20 +491,37 @@
           </div>
         </div>
       </li>
+      -->
     </ul>
+
+    <div class="btn-wrapper">
+      <div class="video-container container" style="background-color: #fff">
+        <div class="btn-container">
+          <a href="#" class="btn">Download our pdf</a>
+        </div>
+        <div class="btn-container">
+          <a
+            href="https://globalcaredevelopment.com/about/"
+            class="btn btn-small"
+            >Team</a
+          >
+          <a href="https://globalcaredevelopment.com/" class="btn btn-small"
+            ><img src="./img/globalCare.png" alt="globalCare"
+          /></a>
+        </div>
+      </div>
+    </div>
 
     <script src="https://hammerjs.github.io/dist/hammer.js"></script>
     <script>
       const list = document.querySelector(".list");
-      const textContainer = document.querySelector(".text-container");
-
       let nodes = Array.from(list.children);
       const roles = ["hide", "prev", "act", "next", "new-next"];
-      let currentIndex = 0; // поточний слайд
-      let maxSeenIndex = 0; // найвіддаленіший слайд, який бачив користувач
+      let currentIndex = 0;
+      let maxSeenIndex = 0;
       let isScrolling = false;
 
-      // Присвоюємо ролі та керуємо відео
+      // Функція для застосування ролей слайдів та керування відео
       function applyRoles() {
         nodes.forEach((node, i) => {
           node.className = "";
@@ -491,7 +531,6 @@
           else if (i === currentIndex + 1) node.classList.add("next");
           else node.classList.add("hide");
 
-          // Керування відео
           const video = node.querySelector("video");
           if (video) {
             if (i === currentIndex) {
@@ -507,19 +546,18 @@
           }
         });
       }
+
+      // Анімація тексту
       function animateText(el) {
         if (!el) return;
 
-        // Контейнер стає видимим
         el.style.opacity = 1;
-
-        // Розбиваємо на рядки по <br>
         const html = el.innerHTML;
         const lines = html.split(/<br\s*\/?>/i);
-        el.textContent = ""; // очищуємо вміст
+        el.textContent = "";
 
         lines.forEach((line, lineIndex) => {
-          line = line.replace(/\s+/g, " ").trim(); // повторювані пробіли → 1
+          line = line.replace(/\s+/g, " ").trim();
           const words = line.split(" ");
 
           words.forEach((word, wordIndex) => {
@@ -531,21 +569,13 @@
             span.style.animationDelay = `${wordIndex * 0.15}s`;
             el.appendChild(span);
 
-            if (wordIndex < words.length - 1) {
+            if (wordIndex < words.length - 1)
               el.appendChild(document.createTextNode(" "));
-            }
           });
 
-          if (lineIndex < lines.length - 1) {
+          if (lineIndex < lines.length - 1)
             el.appendChild(document.createElement("br"));
-          }
         });
-      }
-
-      function textContFunc(el) {
-        if (!el) return;
-        el.style.opacity = "1"; // робимо видимим
-        console.log("textContainer: ", el);
       }
 
       function updateTextAnimations() {
@@ -553,12 +583,8 @@
           const textEl = node.querySelector(".text-container p");
           if (!textEl) return;
 
-          if (node.classList.contains("act")) {
-            animateText(textEl);
-            textContFunc(node.querySelector(".text-container")); // передаємо контейнер
-          } else {
-            textEl.textContent = textEl.textContent;
-          }
+          if (node.classList.contains("act")) animateText(textEl);
+          else textEl.textContent = textEl.textContent;
         });
       }
 
@@ -567,33 +593,110 @@
         updateTextAnimations();
       }
 
-      // Логіка свайпу: просто крутимо масив ролей
+      // Навігація
+      let allowPageScroll = false; // прапорець для дозволу скролу сторінки
+
+      const scrollDelay = 700;
+      let accumulatedDelta = 0;
+
+      let pageScrollTimeout = null;
+
+      list.addEventListener(
+        "wheel",
+        (e) => {
+          const delta = e.deltaY;
+          const hasNextSlides = list.querySelector(".next") !== null;
+
+          if (isScrolling) {
+            e.preventDefault();
+            return;
+          }
+
+          // --- Якщо ще є next слайди (НЕ останній слайд) ---
+          if (hasNextSlides) {
+            e.preventDefault();
+            accumulatedDelta += delta;
+
+            if (accumulatedDelta > 50) {
+              isScrolling = true;
+              next();
+              accumulatedDelta = 0;
+
+              // коли перейшли на останній слайд → ставимо затримку на дозвіл скролу
+              if (!list.querySelector(".next")) {
+                clearTimeout(pageScrollTimeout);
+                allowPageScroll = false;
+                pageScrollTimeout = setTimeout(() => {
+                  allowPageScroll = true;
+                }, 1000); // 1 секунда пауза
+              }
+
+              setTimeout(() => (isScrolling = false), scrollDelay);
+            } else if (accumulatedDelta < -50) {
+              isScrolling = true;
+              prev();
+              accumulatedDelta = 0;
+              setTimeout(() => (isScrolling = false), scrollDelay);
+            }
+            return;
+          }
+
+          // --- Якщо next більше немає (останній слайд) ---
+          if (!hasNextSlides) {
+            if (delta > 0) {
+              // скрол вниз
+              if (!allowPageScroll) {
+                e.preventDefault(); // блокуємо, поки не пройшла пауза
+                return;
+              }
+              const btnWrapper = document.querySelector(".btn-wrapper");
+              if (btnWrapper) {
+                btnWrapper.scrollIntoView({ behavior: "smooth" });
+              }
+            } else if (delta < 0 && window.scrollY === 0) {
+              // скрол вверх
+              e.preventDefault();
+              isScrolling = true;
+              prev();
+              setTimeout(() => (isScrolling = false), scrollDelay);
+            }
+          }
+        },
+        { passive: false }
+      );
+
       function next() {
         if (currentIndex < nodes.length - 1) {
           currentIndex++;
-          maxSeenIndex = Math.max(maxSeenIndex, currentIndex); // оновлюємо
+          maxSeenIndex = Math.max(maxSeenIndex, currentIndex);
           applyRolesWithText();
+
+          // якщо це останній слайд — через 2 секунди дозволяємо скрол сторінки
+          if (currentIndex === nodes.length - 1) {
+            setTimeout(() => {
+              allowPageScroll = true;
+            }, 2000); // 2 секунди пауза
+          }
         }
       }
 
       function prev() {
-        // Дозволяємо назад тільки якщо користувач бачив цей слайд
         if (currentIndex > 0 && currentIndex <= maxSeenIndex) {
           currentIndex--;
           applyRolesWithText();
         }
       }
+
       // Клік на відео
       list.addEventListener("click", (e) => {
         const video = e.target.closest("video");
         if (!video) return;
         const li = video.closest("li");
         if (!li.classList.contains("act")) return;
-        if (video.paused) video.play();
-        else video.pause();
+        video.paused ? video.play() : video.pause();
       });
 
-      // Свайпи Hammer.js
+      // Swipe Hammer.js
       if (window.Hammer) {
         const h = new Hammer(list);
         h.get("swipe").set({ direction: Hammer.DIRECTION_ALL });
@@ -609,68 +712,8 @@
         if (e.key === "ArrowRight") next();
       });
 
-      // scroll (wheel control)
-      const scrollDelay = 700; // час між скролами (≈ тривалість анімації)
-      let accumulatedDelta = 0;
-
-      list.addEventListener(
-        "wheel",
-        (e) => {
-          e.preventDefault();
-
-          if (isScrolling) return;
-
-          const absDelta = Math.abs(e.deltaY);
-
-          // ---- 🖱 МИШКА (великі значення) ----
-          if (absDelta >= 100) {
-            isScrolling = true;
-            if (e.deltaY > 0) next();
-            else prev();
-
-            setTimeout(() => {
-              isScrolling = false;
-            }, scrollDelay);
-            return;
-          }
-
-          // ---- 🖐 ТАЧПАД (дрібні значення, накопичуємо) ----
-          accumulatedDelta += e.deltaY;
-
-          if (Math.abs(accumulatedDelta) > 60) {
-            isScrolling = true;
-
-            if (accumulatedDelta > 0) next();
-            else prev();
-
-            accumulatedDelta = 0;
-
-            setTimeout(() => {
-              isScrolling = false;
-            }, scrollDelay);
-          }
-        },
-        { passive: false }
-      );
-
-      // Старт
+      // Запуск
       applyRolesWithText();
-
-      function applyDynamicScaling() {
-        const activeIndex = roles.indexOf("act");
-
-        nodes.forEach((node, i) => {
-          let distance = Math.abs(i - activeIndex);
-          if (distance > 2) distance = 2; // обмежуємо крайні
-          const scale = 1 - distance * 0.15; // 0.85, 0.7 ...
-
-          node.style.transform = `translateX(${
-            (i - activeIndex) * 100
-          }px) scale(${scale})`;
-          node.style.opacity = 1 - distance * 0.3; // крайні трохи прозорі
-          node.style.zIndex = 10 - distance;
-        });
-      }
     </script>
   </body>
 </html>
