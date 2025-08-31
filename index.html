@@ -623,7 +623,35 @@
 
       function applyRolesWithText() {
         applyRoles();
-        updateTextAnimations();
+
+        nodes.forEach((node, i) => {
+          const textEl = node.querySelector(".text-container p");
+          if (!textEl) return;
+
+          const video = node.querySelector("video");
+
+          if (node.classList.contains("act") && video) {
+            // Якщо є відео — чекаємо на його початок
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+              playPromise
+                .then(() => {
+                  animateText(textEl);
+                })
+                .catch(() => {
+                  // якщо autoplay блокується браузером
+                  animateText(textEl);
+                });
+            } else {
+              animateText(textEl);
+            }
+          } else if (node.classList.contains("act")) {
+            // Якщо немає відео — запускаємо текст відразу
+            animateText(textEl);
+          } else {
+            textEl.textContent = textEl.textContent;
+          }
+        });
       }
 
       // Навігація
