@@ -169,7 +169,7 @@
       }
 
       .btn-wrapper {
-        display: flex;
+        display: none;
         justify-content: center;
         align-items: center;
         width: 100%;
@@ -197,6 +197,7 @@
         font-weight: bold;
         color: #333;
       }
+
       .btn {
         display: flex;
         justify-content: center;
@@ -204,18 +205,28 @@
         max-width: 280px;
         width: 100%;
         padding: 25px 5px;
-        background-color: #000;
+        background: #000;
         color: #fff;
         text-decoration: none;
         border-radius: 10px;
-        font-size: 12px;
+        font-size: 16px;
         text-align: center;
-        transition: background-color 0.3s ease;
+
+        /* Базовий стан */
+        transform: translateY(0) scale(1);
+        transition: all 0.3s ease;
+      }
+
+      /* Hover effect */
+      .btn:hover {
+        background-color: #333;
+        transform: translateY(-3px) scale(1.03);
+        /* background: linear-gradient(135deg, #000 0%, #444 100%); */
+        /* box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35); */
       }
 
       .btn-small {
         padding: 15px 5px;
-        font-size: 10px;
       }
 
       .btn img {
@@ -234,7 +245,7 @@
       .text-container {
         position: absolute;
         max-width: 900px;
-        width: 950px;
+        width: 650px;
         bottom: 150px;
         /* left: 50%;
         transform: translateX(-50%); */
@@ -242,7 +253,7 @@
         border-radius: 12px;
         background: rgba(0, 0, 0, 0.6);
         color: #fff;
-        font-size: 1.2rem;
+        font-size: clamp(18px, 4vw, 24px);
         font-weight: bold;
         text-align: center;
         text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
@@ -252,12 +263,24 @@
         z-index: 5;
       }
 
+      @media screen and (max-width: 650px) {
+        .text-container {
+          max-width: 450px;
+          width: 450px;
+        }
+      }
+      @media screen and (max-width: 480px) {
+        .text-container {
+          width: 320px;
+        }
+      }
+
       .act .text-container {
         opacity: 1;
       }
 
       .text-container p {
-        font-size: clamp(16px, 5vw, 36px);
+        font-size: clamp(18px, 5vw, 36px);
         text-shadow: 0 0 5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 0, 0, 0.4);
       }
       .text-container span {
@@ -643,6 +666,11 @@
 
           // --- Якщо next більше немає (останній слайд) ---
           if (!hasNextSlides) {
+            const btnWrapper = document.querySelector(".btn-wrapper");
+            if (btnWrapper) {
+              btnWrapper.style.display = "flex"; // показуємо кнопки
+            }
+
             if (delta > 0) {
               // скрол вниз
               if (!allowPageScroll) {
