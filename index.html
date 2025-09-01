@@ -79,6 +79,7 @@
         align-items: center;
         width: 100%;
         padding: 20px 40px;
+        padding-bottom: 35px;
       }
 
       .header .logo {
@@ -205,7 +206,8 @@
         max-height: 874px;
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        object-fit: initial;
+        padding-top: 5px;
         display: block;
         border-radius: 70px;
       }
@@ -327,7 +329,7 @@
       }
 
       .list li.act .text-container {
-        opacity: 1;
+        /* opacity: 1; */
         transform: scale(1);
       }
 
@@ -344,6 +346,13 @@
       }
 
       .act .text-container {
+        opacity: 1;
+      }
+      .act .text-container.hidden {
+        opacity: 0;
+      }
+
+      .act .text-container.visible {
         opacity: 1;
       }
 
@@ -396,11 +405,6 @@
       .video-container {
         width: 100%;
         height: 100%;
-      }
-
-      .video {
-        height: 100%;
-        object-fit: cover; /* підлаштовує відео під контейнер */
       }
 
       @keyframes slideInLeft {
@@ -524,13 +528,13 @@
       </video>
     </div>
 
-    <header class="header">
+    <header class="header" id="top">
       <img class="logo" src="./img/logo.png" alt="logo" />
     </header>
 
     <ul class="list" aria-label="carousel">
       <li class="act">
-        <div class="text-container">
+        <div class="text-container hidden">
           <p>Communication to kids needs to be VISUAL</p>
         </div>
         <div class="item">
@@ -584,7 +588,7 @@
       </li>
     </ul>
 
-    <div class="btn-wrapper">
+    <div class="btn-wrapper" id="btn-wrapper">
       <div class="video-container container" style="background-color: #fff">
         <div class="btn-container">
           <a href="#" class="btn">Download our pdf</a>
@@ -716,31 +720,103 @@
           });
         }
 
+        const target = document.querySelector(".act .text-container");
+        console.log("target: ", target);
+        if (target) {
+          setTimeout(() => {
+            target.classList.remove("hidden"); // додаємо клас, який робить opacity:1
+          }, 10000);
+        }
+
         function applyRolesWithText() {
           applyRoles();
           nodes.forEach((node) => {
             const textEl = node.querySelector(".text-container p");
             if (!textEl) return;
             if (node.classList.contains("act")) animateText(textEl);
-            else textEl.textContent = textEl.textContent;
+            else textEl.textContent = textEl.textContent; // ❌ тут ти все ламаєш
           });
         }
 
+        function smoothScrollToTop(duration = 500) {
+          const start =
+            window.scrollY ||
+            document.documentElement.scrollTop ||
+            document.body.scrollTop;
+          const startTime = performance.now();
+
+          function scrollStep(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1); // від 0 до 1
+            const ease = 1 - Math.pow(1 - progress, 3); // cubic ease-out
+            window.scrollTo(0, start * (1 - ease));
+
+            if (progress < 1) {
+              requestAnimationFrame(scrollStep);
+            }
+          }
+
+          requestAnimationFrame(scrollStep);
+        }
+
+        function smoothScrollToElement(el, duration = 500) {
+          const start =
+            window.scrollY || document.documentElement.scrollTop || 0;
+          const targetTop = el.getBoundingClientRect().top + start;
+          const distance = targetTop - start;
+          const startTime = performance.now();
+
+          function step(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const ease = 1 - Math.pow(1 - progress, 3); // cubic ease-out
+            window.scrollTo(0, start + distance * ease);
+            if (progress < 1) requestAnimationFrame(step);
+          }
+
+          requestAnimationFrame(step);
+        }
+
         function next() {
+          const btnWrapper = document.getElementById("btn-wrapper");
+
           if (currentIndex < nodes.length - 1) {
             currentIndex++;
             maxSeenIndex = Math.max(maxSeenIndex, currentIndex);
             applyRolesWithText();
+
+            // Якщо ми дійшли до останнього слайда
             if (currentIndex === nodes.length - 1) {
               setTimeout(() => {
                 allowPageScroll = true;
               }, 2000);
             }
           }
+
+          if (allowPageScroll) {
+            btnWrapper.style.display = "flex";
+            if (btnWrapper) {
+              console.log("work");
+              smoothScrollToElement(btnWrapper, 500);
+              btnWrapper.scrollIntoView({ behavior: "smooth" });
+              allowPageScroll = false;
+            }
+          }
         }
 
         function prev() {
-          if (currentIndex > 0 && currentIndex <= maxSeenIndex) {
+          const scrollY =
+            window.scrollY ||
+            document.documentElement.scrollTop ||
+            document.body.scrollTop;
+
+          if (scrollY > 0) {
+            // скролимо до елемента #top
+            const topEl = document.getElementById("top");
+            if (topEl) {
+              topEl.scrollIntoView({ behavior: "smooth" });
+            }
+          } else if (currentIndex > 0 && currentIndex <= maxSeenIndex) {
             currentIndex--;
             applyRolesWithText();
           }
@@ -751,6 +827,7 @@
           (e) => {
             const delta = e.deltaY;
             const hasNextSlides = list.querySelector(".next") !== null;
+            const btnWrapper = document.querySelector(".btn-wrapper");
 
             if (isScrolling) {
               e.preventDefault();
@@ -766,9 +843,10 @@
                 next();
                 accumulatedDelta = 0;
 
-                if (!list.querySelector(".next")) {
-                  clearTimeout(pageScrollTimeout);
+                // Якщо після next ми на останньому слайді — скролимо до кнопки
+                if (!list.querySelector(".next") && btnWrapper) {
                   allowPageScroll = false;
+                  btnWrapper.scrollIntoView({ behavior: "smooth" });
                   pageScrollTimeout = setTimeout(() => {
                     allowPageScroll = true;
                   }, 1000);
@@ -776,30 +854,32 @@
 
                 setTimeout(() => (isScrolling = false), scrollDelay);
               } else if (accumulatedDelta < -50) {
-                isScrolling = true;
-                prev();
-                accumulatedDelta = 0;
-                setTimeout(() => (isScrolling = false), scrollDelay);
+                // тільки якщо сторінка в самому верху
+                if (
+                  (window.scrollY || document.documentElement.scrollTop) === 0
+                ) {
+                  isScrolling = true;
+                  prev();
+                  accumulatedDelta = 0;
+                  setTimeout(() => (isScrolling = false), scrollDelay);
+                }
               }
               return;
             }
 
-            if (!hasNextSlides) {
-              const btnWrapper = document.querySelector(".btn-wrapper");
-              if (btnWrapper) {
-                btnWrapper.style.display = "flex";
-              }
+            if (!hasNextSlides && btnWrapper) {
+              btnWrapper.style.display = "flex";
 
               if (delta > 0) {
                 if (!allowPageScroll) {
                   e.preventDefault();
                   return;
                 }
-                const btnWrapper = document.querySelector(".btn-wrapper");
-                if (btnWrapper) {
-                  btnWrapper.scrollIntoView({ behavior: "smooth" });
-                }
-              } else if (delta < 0 && window.scrollY === 0) {
+                btnWrapper.scrollIntoView({ behavior: "smooth" });
+              } else if (
+                delta < 0 &&
+                (window.scrollY || document.documentElement.scrollTop) === 0
+              ) {
                 e.preventDefault();
                 isScrolling = true;
                 prev();
@@ -833,13 +913,6 @@
         });
 
         applyRolesWithText();
-      });
-
-      window.addEventListener("load", () => {
-        const firstText = document.querySelector(
-          ".list li.act .text-container p"
-        );
-        if (firstText) animateText(firstText);
       });
     </script>
   </body>
