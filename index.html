@@ -259,7 +259,7 @@
         color: #fff;
         text-decoration: none;
         border-radius: 12px;
-        font-size: 16px;
+        font-size: 22px;
         font-weight: 400;
         text-align: center;
         letter-spacing: 0.5px;
@@ -850,6 +850,10 @@
             btnWrapper.style.display = "flex";
             if (btnWrapper) {
               console.log("work");
+
+              if (window.innerWidth <= 480) {
+                btnWrapper.scrollIntoView({ behavior: "smooth" });
+              }
               // btnWrapper.scrollIntoView({ behavior: "smooth" });
               // smoothScrollToElement(btnWrapper, 2500);
               allowPageScroll = false;
