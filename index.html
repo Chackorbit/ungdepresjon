@@ -79,14 +79,14 @@
         align-items: center;
         width: 100%;
         padding: 20px 40px;
-        padding-bottom: 35px;
+        padding-bottom: 45px;
       }
 
       .header .logo {
         max-height: 80px !important;
-        max-width: 500px;
+        /* max-width: 500px; */
         height: 100%;
-        width: 100%;
+        width: auto;
       }
 
       .list {
@@ -115,8 +115,7 @@
         border-radius: 10px;
         transition: transform 0.6s ease, opacity 0.6s ease;
         color: #fff;
-        font-weight: 700;
-        text-transform: uppercase;
+        font-weight: 400 !important;
         user-select: none;
         aspect-ratio: 426 / 884;
       }
@@ -245,7 +244,7 @@
         width: 100%;
         margin-bottom: 20px;
         font-size: 18px;
-        font-weight: bold;
+        font-weight: 400;
         color: #333;
       }
 
@@ -261,7 +260,7 @@
         text-decoration: none;
         border-radius: 12px;
         font-size: 16px;
-        font-weight: 600;
+        font-weight: 400;
         text-align: center;
         letter-spacing: 0.5px;
 
@@ -312,7 +311,7 @@
         background: rgba(0, 0, 0, 0.8);
         color: #fff;
         font-size: clamp(18px, 4vw, 24px);
-        font-weight: bold;
+        font-weight: 400;
         text-align: center;
         text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
         animation: fadeSlideIn 1s ease-out forwards;
@@ -357,6 +356,7 @@
       }
 
       .text-container p {
+        text-transform: none !important;
         opacity: 0;
         font-size: clamp(18px, 5vw, 36px);
         text-shadow: 0 0 5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 0, 0, 0.4);
@@ -430,8 +430,8 @@
         height: 100%;
       }
       .list li {
-        max-width: 280px;
-        max-height: 640px;
+        max-width: 260px;
+        max-height: 600px;
         height: 100%;
         border-radius: 50px;
       }
@@ -449,7 +449,7 @@
       }
       .video {
         max-width: 270px;
-        max-height: 580px;
+        max-height: 535px;
         height: 100%;
         width: 100%;
         border-radius: 50px;
@@ -457,7 +457,7 @@
 
       .prev {
         transform: translateX(-300px) scale(0.85) !important;
-        opacity: 0.5;
+        opacity: 1;
         z-index: 2;
       }
       .next {
@@ -472,6 +472,10 @@
         .header {
           padding-top: 10px;
           padding-bottom: 20px;
+        }
+
+        .logo {
+          width: 100% !important;
         }
 
         .btn {
@@ -524,6 +528,30 @@
           z-index: 2;
         }
       }
+
+      #playBtn {
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -130%);
+        border: none;
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+        cursor: pointer;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        background: none;
+      }
+      .hiddenBtn {
+        display: flex !important;
+      }
+
+      .playBtn img {
+        width: 90%;
+      }
     </style>
   </head>
   <body>
@@ -540,10 +568,13 @@
     <ul class="list" aria-label="carousel">
       <li class="act">
         <div class="text-container hidden">
-          <p>Communication to kids needs to be VISUAL</p>
+          <p>Communication to kids needs to be VISUAL...</p>
         </div>
         <div class="item">
           <div class="video-container">
+            <button id="playBtn" class="playBtn hiddenBtn">
+              <img src="./img/playBtnImg.png" alt="play btn" />
+            </button>
             <video class="video" playsinline autoplay muted loop>
               <source src="./img/Video1Mobile.mp4" type="video/mp4" />
             </video>
@@ -554,7 +585,7 @@
         <div class="text-container">
           <p>
             In a motivating <br />
-            package
+            package...
           </p>
         </div>
         <div class="item">
@@ -628,6 +659,7 @@
 
         const intro = document.getElementById("intro");
         const introVideo = document.getElementById("introVideo");
+        const playBtn = document.querySelector(".playBtn");
 
         if (!intro || !introVideo) return;
 
@@ -740,7 +772,6 @@
         }
 
         const target = document.querySelector(".act .text-container");
-        console.log("target: ", target);
         if (target) {
           setTimeout(() => {
             target.classList.remove("hidden"); // додаємо клас, який робить opacity:1
@@ -779,9 +810,12 @@
         }
 
         function smoothScrollToElement(el, duration = 500) {
-          const start =
-            window.scrollY || document.documentElement.scrollTop || 0;
-          const targetTop = el.getBoundingClientRect().top + start;
+          if (!el) return;
+
+          // Отримуємо координату елемента відносно документа
+          const targetTop = el.getBoundingClientRect().top + window.scrollY;
+
+          const start = window.scrollY;
           const distance = targetTop - start;
           const startTime = performance.now();
 
@@ -816,8 +850,8 @@
             btnWrapper.style.display = "flex";
             if (btnWrapper) {
               console.log("work");
-              smoothScrollToElement(btnWrapper, 500);
-              btnWrapper.scrollIntoView({ behavior: "smooth" });
+              // btnWrapper.scrollIntoView({ behavior: "smooth" });
+              // smoothScrollToElement(btnWrapper, 2500);
               allowPageScroll = false;
             }
           }
@@ -833,6 +867,7 @@
             // скролимо до елемента #top
             const topEl = document.getElementById("top");
             if (topEl) {
+              // smoothScrollToTop(1500);
               topEl.scrollIntoView({ behavior: "smooth" });
             }
           } else if (currentIndex > 0 && currentIndex <= maxSeenIndex) {
@@ -894,7 +929,8 @@
                   e.preventDefault();
                   return;
                 }
-                btnWrapper.scrollIntoView({ behavior: "smooth" });
+                // btnWrapper.scrollIntoView({ behavior: "smooth" });
+                smoothScrollToElement(btnWrapper, 1500);
               } else if (
                 delta < 0 &&
                 (window.scrollY || document.documentElement.scrollTop) === 0
@@ -914,7 +950,13 @@
           if (!video) return;
           const li = video.closest("li");
           if (!li.classList.contains("act")) return;
-          video.paused ? video.play() : video.pause();
+          if (video.paused) {
+            video.play();
+            playBtn.remove();
+          } else {
+            video.pause();
+          }
+          // video.paused ? video.play() : video.pause();
         });
 
         if (window.Hammer) {
