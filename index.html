@@ -552,6 +552,13 @@
       .playBtn img {
         width: 90%;
       }
+
+      #intro img {
+        width: 100%;
+        height: 100%;
+        margin-top: 80px;
+        transition: opacity 0.8s ease;
+      }
     </style>
   </head>
   <body>
@@ -559,6 +566,14 @@
       <video id="introVideo" autoplay muted playsinline loop>
         <source src="./img/GDCRedirectMobile.mp4" type="video/mp4" />
       </video>
+
+      <!-- GIF для iOS мобільних -->
+      <img
+        id="introGif"
+        src="./img/GDCRedirectMobile.gif"
+        alt="Intro animation"
+        style="display: none"
+      />
     </div>
 
     <header class="header" id="top">
@@ -663,27 +678,52 @@
 
         if (!intro || !introVideo) return;
 
-        // Налаштовуємо відео
-        introVideo.muted = true;
-        introVideo.playsInline = true;
-        introVideo.autoplay = true;
-        introVideo.loop = true;
+        const introGif = document.getElementById("introGif");
 
-        // Спроба автозапуску після canplay
-        introVideo.addEventListener("canplay", () => {
-          introVideo.play().catch((err) => {
-            console.log("Intro video play failed:", err);
+        const isIOS =
+          /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isMobile = window.innerWidth <= 480;
+
+        if (isIOS && isMobile) {
+          // Примусово скидаємо GIF при кожному завантаженні
+          introGif.src = "./img/GDCRedirectMobile.gif?rand=" + Date.now();
+          introGif.style.display = "block";
+        }
+        if (isIOS && isMobile) {
+          // Показуємо GIF
+          introGif.style.display = "block";
+          introVideo.style.display = "none";
+        } else {
+          // Показуємо відео
+          introVideo.style.display = "block";
+          introVideo.muted = true;
+          introVideo.playsInline = true;
+          introVideo.autoplay = true;
+          introVideo.loop = true;
+
+          const mobileSrc = "./img/GDCRedirectMobile.mp4";
+          const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4";
+          const sourceEl = introVideo.querySelector("source");
+
+          // Встановлюємо джерело залежно від ширини
+          sourceEl.src = window.innerWidth <= 480 ? mobileSrc : desktopSrc;
+          introVideo.load();
+
+          introVideo.play().catch(() => {
+            // fallback для iOS
+            intro.addEventListener(
+              "click",
+              () => {
+                introVideo.play().catch(() => {});
+              },
+              { once: true }
+            );
           });
-        });
+        }
 
-        // fallback: клік для iOS
-        intro.addEventListener("click", () => {
-          if (introVideo.paused) introVideo.play().catch(() => {});
-        });
-
-        // Для плавного сховання intro
         setTimeout(() => {
           intro.style.opacity = 0;
+          introGif.style.opacity = 0;
         }, 8000);
         setTimeout(() => {
           intro.style.display = "none";
