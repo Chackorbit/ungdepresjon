@@ -469,6 +469,11 @@
       }
 
       @media screen and (max-width: 480px) {
+        .header {
+          padding-top: 10px;
+          padding-bottom: 20px;
+        }
+
         .btn {
           width: 100%;
           padding: 18px 5px;
@@ -524,7 +529,7 @@
   <body>
     <div id="intro">
       <video id="introVideo" autoplay muted playsinline loop>
-        <source src="./img/GDCRedirectDesktopresolution.mp4" type="video/mp4" />
+        <source src="./img/GDCRedirectMobile.mp4" type="video/mp4" />
       </video>
     </div>
 
@@ -554,7 +559,7 @@
         </div>
         <div class="item">
           <div class="video-container">
-            <video class="video" autoplay muted playsinline loop>
+            <video class="video" muted playsinline loop>
               <source src="./img/Video2.mp4" type="video/mp4" />
             </video>
           </div>
@@ -580,7 +585,7 @@
         </div>
         <div class="item">
           <div class="video-container">
-            <video class="video" autoplay muted playsinline loop>
+            <video class="video" muted playsinline loop>
               <source src="./img/Video4.mov" type="video/mp4" />
             </video>
           </div>
@@ -623,38 +628,52 @@
 
         const intro = document.getElementById("intro");
         const introVideo = document.getElementById("introVideo");
-        if (intro && introVideo) {
-          intro.style.transition = "opacity 1s ease";
-          introVideo.muted = true;
-          introVideo
-            .play()
-            .catch((err) => console.log("Video play error:", err));
 
-          setTimeout(() => {
-            intro.style.opacity = 0;
-          }, 8000);
-          setTimeout(() => {
-            intro.style.display = "none";
-          }, 9000);
-        }
+        if (!intro || !introVideo) return;
 
+        // Налаштовуємо відео
+        introVideo.muted = true;
+        introVideo.playsInline = true;
+        introVideo.autoplay = true;
+        introVideo.loop = true;
+
+        // Спроба автозапуску після canplay
+        introVideo.addEventListener("canplay", () => {
+          introVideo.play().catch((err) => {
+            console.log("Intro video play failed:", err);
+          });
+        });
+
+        // fallback: клік для iOS
+        intro.addEventListener("click", () => {
+          if (introVideo.paused) introVideo.play().catch(() => {});
+        });
+
+        // Для плавного сховання intro
+        setTimeout(() => {
+          intro.style.opacity = 0;
+        }, 8000);
+        setTimeout(() => {
+          intro.style.display = "none";
+        }, 9000);
+
+        // Встановлюємо джерело залежно від мобільного / десктоп
         const mobileSrc = "./img/GDCRedirectMobile.mp4";
         const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4";
 
         function updateVideoSource() {
           const isMobile = window.innerWidth <= 700;
-          const currentSrc = introVideo.querySelector("source").src;
+          const sourceEl = introVideo.querySelector("source");
+          const currentSrc = sourceEl.src;
 
           if (isMobile && !currentSrc.includes("Mobile")) {
             introVideo.pause();
-            introVideo.querySelector("source").src = mobileSrc;
+            sourceEl.src = mobileSrc;
             introVideo.load();
-            introVideo.play().catch(() => {});
           } else if (!isMobile && !currentSrc.includes("Desktop")) {
             introVideo.pause();
-            introVideo.querySelector("source").src = desktopSrc;
+            sourceEl.src = desktopSrc;
             introVideo.load();
-            introVideo.play().catch(() => {});
           }
         }
 
