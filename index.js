@@ -23,16 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const isMobile = window.innerWidth <= 480;
 
   if (isIOS && isMobile) {
-    // Примусово скидаємо GIF при кожному завантаженні
     introGif.src = "./img/GDCRedirectMobile.gif?rand=" + Date.now();
     introGif.style.display = "block";
   }
   if (isIOS && isMobile) {
-    // Показуємо GIF
     introGif.style.display = "block";
     introVideo.style.display = "none";
   } else {
-    // Показуємо відео
     introVideo.style.display = "block";
     introVideo.muted = true;
     introVideo.playsInline = true;
@@ -43,12 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4";
     const sourceEl = introVideo.querySelector("source");
 
-    // Встановлюємо джерело залежно від ширини
     sourceEl.src = window.innerWidth <= 480 ? mobileSrc : desktopSrc;
     introVideo.load();
 
     introVideo.play().catch(() => {
-      // fallback для iOS
       intro.addEventListener(
         "click",
         () => {
@@ -67,7 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
     intro.style.display = "none";
   }, 9000);
 
-  // Встановлюємо джерело залежно від мобільного / десктоп
   const mobileSrc = "./img/GDCRedirectMobile.mp4";
   const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4";
 
@@ -150,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const target = document.querySelector(".act .text-container");
   if (target) {
     setTimeout(() => {
-      target.classList.remove("hidden"); // додаємо клас, який робить opacity:1
+      target.classList.remove("hidden");
     }, 10000);
   }
 
@@ -160,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const textEl = node.querySelector(".text-container p");
       if (!textEl) return;
       if (node.classList.contains("act")) animateText(textEl);
-      else textEl.textContent = textEl.textContent; // ❌ тут ти все ламаєш
+      else textEl.textContent = textEl.textContent;
     });
   }
 
@@ -173,8 +167,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function scrollStep(currentTime) {
       const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1); // від 0 до 1
-      const ease = 1 - Math.pow(1 - progress, 3); // cubic ease-out
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
       window.scrollTo(0, start * (1 - ease));
 
       if (progress < 1) {
@@ -188,7 +182,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function smoothScrollToElement(el, duration = 500) {
     if (!el) return;
 
-    // Отримуємо координату елемента відносно документа
     const targetTop = el.getBoundingClientRect().top + window.scrollY;
 
     const start = window.scrollY;
@@ -198,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function step(currentTime) {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const ease = 1 - Math.pow(1 - progress, 3); // cubic ease-out
+      const ease = 1 - Math.pow(1 - progress, 3);
       window.scrollTo(0, start + distance * ease);
       if (progress < 1) requestAnimationFrame(step);
     }
@@ -214,7 +207,6 @@ document.addEventListener("DOMContentLoaded", () => {
       maxSeenIndex = Math.max(maxSeenIndex, currentIndex);
       applyRolesWithText();
 
-      // Якщо ми дійшли до останнього слайда
       if (currentIndex === nodes.length - 1) {
         setTimeout(() => {
           allowPageScroll = true;
@@ -230,8 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (window.innerWidth <= 480) {
           btnWrapper.scrollIntoView({ behavior: "smooth" });
         }
-        // btnWrapper.scrollIntoView({ behavior: "smooth" });
-        // smoothScrollToElement(btnWrapper, 2500);
+
         allowPageScroll = false;
       }
     }
@@ -244,10 +235,8 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.scrollTop;
 
     if (scrollY > 0) {
-      // скролимо до елемента #top
       const topEl = document.getElementById("top");
       if (topEl) {
-        // smoothScrollToTop(1500);
         topEl.scrollIntoView({ behavior: "smooth" });
       }
     } else if (currentIndex > 0 && currentIndex <= maxSeenIndex) {
@@ -277,7 +266,6 @@ document.addEventListener("DOMContentLoaded", () => {
           next();
           accumulatedDelta = 0;
 
-          // Якщо після next ми на останньому слайді — скролимо до кнопки
           if (!list.querySelector(".next") && btnWrapper) {
             allowPageScroll = false;
             btnWrapper.scrollIntoView({ behavior: "smooth" });
@@ -288,7 +276,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
           setTimeout(() => (isScrolling = false), scrollDelay);
         } else if (accumulatedDelta < -50) {
-          // тільки якщо сторінка в самому верху
           if ((window.scrollY || document.documentElement.scrollTop) === 0) {
             isScrolling = true;
             prev();
@@ -307,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             return;
           }
-          // btnWrapper.scrollIntoView({ behavior: "smooth" });
+
           smoothScrollToElement(btnWrapper, 1500);
         } else if (
           delta < 0 &&
@@ -334,7 +321,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       video.pause();
     }
-    // video.paused ? video.play() : video.pause();
   });
 
   if (window.Hammer) {
