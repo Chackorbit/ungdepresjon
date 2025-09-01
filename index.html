@@ -248,6 +248,18 @@
         color: #333;
       }
 
+      .btn-container .text {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        width: 100%;
+        margin-top: 20px;
+      }
+      .btn-container img {
+        width: 89%;
+        margin-left: auto;
+      }
+
       .btn {
         display: flex;
         justify-content: center;
@@ -287,7 +299,7 @@
       }
 
       .btn img {
-        max-width: 200px;
+        max-width: 300px;
         width: 100%;
       }
 
@@ -301,13 +313,12 @@
 
       .text-container {
         position: absolute;
-        max-width: 900px;
-        width: 650px;
+        max-width: 100vw !important;
+        width: 100vw !important;
         bottom: 150px;
 
         transform: translateX(-50%);
         padding: 35px 25px;
-        border-radius: 12px;
         background: rgba(0, 0, 0, 0.8);
         color: #fff;
         font-size: clamp(18px, 4vw, 24px);
@@ -534,11 +545,11 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -130%);
+        transform: translate(-50%, -90%);
         border: none;
         border-radius: 50%;
-        width: 70px;
-        height: 70px;
+        width: 100px;
+        height: 100px;
         cursor: pointer;
         display: none;
         justify-content: center;
@@ -588,7 +599,7 @@
         <div class="item">
           <div class="video-container">
             <button id="playBtn" class="playBtn hiddenBtn">
-              <img src="./img/playBtnImg.png" alt="play btn" />
+              <img src="./img/playBtn.png" alt="play btn" />
             </button>
             <video class="video" playsinline autoplay muted loop>
               <source src="./img/Video1Mobile.mp4" type="video/mp4" />
@@ -642,7 +653,7 @@
     <div class="btn-wrapper" id="btn-wrapper">
       <div class="video-container container" style="background-color: #fff">
         <div class="btn-container">
-          <a href="#" class="btn">Download our pdf</a>
+          <a href="#" class="btn">Download Whitepaper</a>
         </div>
         <div class="btn-container">
           <a
@@ -653,6 +664,13 @@
           <a href="https://globalcaredevelopment.com/" class="btn btn-small"
             ><img src="./img/globalCare.png" alt="globalCare"
           /></a>
+        </div>
+
+        <div class="btn-container">
+          <p class="text">
+            <span class="designedBy">Designed by</span>
+            <img src="./img/brenstorm.png" alt="brennstrom" />
+          </p>
         </div>
       </div>
     </div>
