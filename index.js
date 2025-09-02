@@ -199,8 +199,20 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(step);
   }
 
+  function updateArrows() {
+    const arrowLeft = document.querySelector(".arrow-left");
+    const arrowRight = document.querySelector(".arrow-right");
+
+    // ліва кнопка неактивна якщо ми на першому слайді
+    arrowLeft.disabled = currentIndex === 0;
+
+    // права кнопка неактивна якщо ми на останньому слайді
+    arrowRight.disabled = currentIndex === nodes.length - 1;
+  }
+
   function next() {
     const btnWrapper = document.getElementById("btn-wrapper");
+    const arrowLeft = document.querySelector(".arrow-left");
 
     if (currentIndex < nodes.length - 1) {
       currentIndex++;
@@ -208,9 +220,11 @@ document.addEventListener("DOMContentLoaded", () => {
       applyRolesWithText();
 
       if (currentIndex === nodes.length - 1) {
-        setTimeout(() => {
+        updateArrows();
+
+        return setTimeout(() => {
           allowPageScroll = true;
-        }, 2000);
+        }, 1000);
       }
     }
 
@@ -243,7 +257,10 @@ document.addEventListener("DOMContentLoaded", () => {
       currentIndex--;
       applyRolesWithText();
     }
+
+    updateArrows();
   }
+  updateArrows();
 
   list.addEventListener(
     "wheel",
@@ -338,4 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   applyRolesWithText();
+
+  document.querySelector(".arrow-left").addEventListener("click", prev);
+  document.querySelector(".arrow-right").addEventListener("click", next);
 });
