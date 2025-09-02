@@ -226,6 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
           allowPageScroll = true;
         }, 1000);
       }
+      updateArrows();
     }
 
     if (allowPageScroll) {
