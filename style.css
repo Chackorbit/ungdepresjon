@@ -121,9 +121,21 @@ body {
 }
 
 .hide {
-  transform: translateX(-400px) scale(0.6);
+  transform: translateX(80px) scale(0.85) !important;
   opacity: 0;
   z-index: 1;
+  animation: fadeOutScale 2s forwards;
+  transition: all 2s ease;
+}
+@keyframes fadeOutScale {
+  from {
+    opacity: 0.5;
+    transform: translateX(100px) scale(0.85);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100px) scale(0.85);
+  }
 }
 
 .prev {
@@ -151,7 +163,7 @@ body {
 }
 
 .list li {
-  transition: transform 2s ease, opacity 2s ease;
+  transition: transform 2s ease;
 }
 
 .list li.slide-left {
@@ -204,9 +216,16 @@ body {
   flex-direction: column;
   width: 100%;
   padding: 20px 0;
+  /* margin-top: -100px; */
   background-color: #fff;
   position: relative;
   z-index: 10;
+}
+
+@media screen and (min-width: 481px) {
+  .btn-wrapper {
+    margin-top: -100px;
+  }
 }
 
 .container {
@@ -256,6 +275,7 @@ body {
 }
 
 .learn-more {
+  position: relative;
   display: flex;
   flex-direction: column;
   max-width: 400px;
@@ -263,6 +283,9 @@ body {
   font-size: 28px;
 }
 .learn-more p {
+  position: absolute;
+  top: -60px;
+  left: 8px;
   display: inline-block;
   padding: 30px;
   transform: rotate(-20deg);
@@ -492,13 +515,14 @@ body {
 .container {
   padding-bottom: 100px !important;
   padding-top: 5px;
+  border-radius: 0;
 }
 
 .arrow-left,
 .arrow-right {
   position: absolute;
-  width: 80px;
-  height: 80px;
+  /* width: 80px; */
+  /* height: 80px; */
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -507,21 +531,22 @@ body {
   text-align: center;
   border: none;
   outline: none;
-  border-radius: 50%;
-  background: #0894a9;
+  border-radius: 50px;
+  background: #b8b8b870;
   color: #000;
-  padding: 30px;
-  font-size: 40px;
+  padding: 20px;
+  font-size: 60px;
   cursor: pointer;
   transition: all 0.5s ease;
   z-index: 100;
 }
 
 .arrow-left {
-  left: 20px;
+  left: 0px;
 }
+
 .arrow-right {
-  right: 20px;
+  right: 0px;
 }
 
 .arrow-left:active,
@@ -539,8 +564,8 @@ body {
 @media screen and (min-width: 481px) {
   .arrow-left:hover,
   .arrow-right:hover {
-    background: #041c3c;
-    color: #fff;
+    background: #dbdbdb;
+    color: #000;
   }
 }
 @media screen and (max-width: 480px) {
