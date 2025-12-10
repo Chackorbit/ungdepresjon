@@ -1,138 +1,120 @@
 <!DOCTYPE html>
 <html lang="uk">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
-    <title>Ung Depresjon, powered by Olsys</title>
-    <meta
-      name="description"
-      content="A preventative platform, aimed at teaching young people the knowledge they need to survive in a challenging and rapidly evolving world, adapted to the modern end user. The app will offer help to those struggling with depressive symptoms."
-    />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <div id="intro">
-      <video id="introVideo" autoplay muted playsinline loop>
-        <source src="./img/GDCRedirectMobile.mp4" type="video/mp4" />
-      </video>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
+  <title>Ung Depresjon, powered by Olsys</title>
+  <meta name="description"
+    content="A preventative platform, aimed at teaching young people the knowledge they need to survive in a challenging and rapidly evolving world, adapted to the modern end user. The app will offer help to those struggling with depressive symptoms." />
 
-      <img
-        id="introGif"
-        src="./img/GDCRedirectMobile.gif"
-        alt="Intro animation"
-        style="display: none"
-      />
-    </div>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
 
-    <header class="header" id="top">
-      <img class="logo" src="./img/logo.png" alt="logo" />
-    </header>
+<body>
+  <div id="intro">
+    <video id="introVideo" autoplay muted playsinline loop>
+      <source src="./img/GDCRedirectMobile.mp4" type="video/mp4" />
+    </video>
 
-    <button disabled class="arrow-left" aria-label="Previous slide">
-      <span>&lt;</span>
-    </button>
-    <button class="arrow-right" aria-label="Next slide">&gt;</button>
+    <img id="introGif" src="./img/GDCRedirectMobile.gif" alt="Intro animation" style="display: none" />
+  </div>
 
-    <ul class="list" aria-label="carousel">
-      <li class="act">
-        <div class="text-container hidden">
-          <p>Communication to kids needs to be VISUAL...</p>
-        </div>
-        <div class="item">
-          <div class="video-container">
-            <button id="playBtn" class="playBtn hiddenBtn">
-              <img src="./img/playBtn.png" alt="play btn" />
-            </button>
-            <video class="video" playsinline autoplay muted loop>
-              <source src="./img/Video1Mobile.mp4" type="video/mp4" />
-            </video>
-          </div>
-        </div>
-      </li>
-      <li class="next">
-        <div class="text-container">
-          <p>
-            In a motivating <br />
-            package...
-          </p>
-        </div>
-        <div class="item">
-          <div class="video-container">
-            <video class="video" muted playsinline loop>
-              <source src="./img/Video2.mp4" type="video/mp4" />
-            </video>
-          </div>
-        </div>
-      </li>
-      <li class="new-next">
-        <div class="text-container">
-          <p>
-            And with the right <br />
-            incentives.
-          </p>
-        </div>
-        <div class="item">
-          <div class="video-container">
-            <img class="video" src="./img/video3.png" alt="img3" />
-          </div>
-        </div>
-      </li>
+  <header class="header" id="top">
+    <img class="logo" src="./img/logo.png" alt="logo" />
+  </header>
 
-      <li class="hide">
-        <div class="text-container">
-          <p>Testing ensures knowledge transfer.</p>
-        </div>
-        <div class="item">
-          <div class="video-container">
-            <video class="video" muted playsinline loop>
-              <source src="./img/Video4.mov" type="video/mp4" />
-            </video>
-          </div>
-        </div>
-      </li>
-    </ul>
+  <button disabled class="arrow-left" aria-label="Previous slide">
+    <span>&lt;</span>
+  </button>
+  <button class="arrow-right" aria-label="Next slide">&gt;</button>
 
-    <div class="btn-wrapper" id="btn-wrapper">
-      <div class="learn-more">
-        <p>Learn more</p>
-        <img src="./img/arrow.png" alt="learn more" />
-      </div>
-
-      <div class="video-container container" style="background-color: #fff">
-        <div class="btn-container">
-          <a href="#" class="btn">Download Whitepaper</a>
-        </div>
-        <div class="btn-container">
-          <a
-            href="https://globalcaredevelopment.com/about/"
-            class="btn btn-small"
-            >Team</a
-          >
-          <a href="https://globalcaredevelopment.com/" class="btn btn-small"
-            ><img src="./img/globalCare.png" alt="globalCare"
-          /></a>
-        </div>
-
-        <div class="btn-container btn-brennstrom">
-          <a href="https://brennstrom.com" class="text">
-            <span class="designedBy">Designed by</span>
-
-            <img src="./img/brenstorm.png" alt="brennstrom" />
-          </a>
+  <ul class="list" aria-label="carousel">
+    <li class="act">
+      <div class="item">
+        <div class="video-container">
+          <button id="playBtn" class="playBtn hiddenBtn">
+            <img src="./img/playBtn.png" alt="play btn" />
+          </button>
+          <video class="video" playsinline autoplay muted loop>
+            <source src="./img/Video1Mobile.mp4" type="video/mp4" />
+          </video>
         </div>
       </div>
+    </li>
+
+    <li class="next">
+      <div class="item">
+        <div class="video-container">
+          <video class="video" muted playsinline loop>
+            <source src="./img/Video2.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </div>
+    </li>
+
+    <li class="new-next">
+      <div class="item">
+        <div class="video-container">
+          <img class="video" src="./img/video3.png" alt="img3" />
+        </div>
+      </div>
+    </li>
+
+    <li class="hide">
+      <div class="item">
+        <div class="video-container">
+          <video class="video" muted playsinline loop>
+            <source src="./img/Video4.mov" type="video/mp4" />
+          </video>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <!-- Глобальний текст-контейнер, ОДИН на всі слайди -->
+  <div class="text-container">
+    <p></p>
+  </div>
+
+
+  <div class="btn-wrapper" id="btn-wrapper">
+    <div class="learn-more">
+      <p>Learn more</p>
+      <img src="./img/arrow.png" alt="learn more" />
     </div>
 
-    <script src="https://hammerjs.github.io/dist/hammer.js"></script>
+    <div class="video-container container" style="background-color: #fff">
+      <div class="btn-container">
+        <a href="http://globalcaredevelopment.com/wp-content/uploads/2025/12/Ung-Depresjon-Impact-Document.pdf"
+          class="btn" target="_blank" rel="noopener noreferrer">
+          Download Whitepaper
+        </a>
+      </div>
 
-    <script src="./index.js"></script>
-  </body>
+      <div class="btn-container">
+        <a href="https://globalcaredevelopment.com/about/" class="btn btn-small">Team</a>
+        <a href="https://globalcaredevelopment.com/" class="btn btn-small"><img src="./img/globalCare.png"
+            alt="globalCare" /></a>
+      </div>
+
+      <div class="btn-container btn-brennstrom">
+        <a href="https://brennstrom.com" class="text">
+          <span class="designedBy">Designed by</span>
+
+          <img src="./img/brenstorm.png" alt="brennstrom" />
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://hammerjs.github.io/dist/hammer.js"></script>
+
+  <script src="./index.js"></script>
+</body>
+
 </html>

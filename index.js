@@ -141,21 +141,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const target = document.querySelector(".act .text-container");
-  if (target) {
-    setTimeout(() => {
-      target.classList.remove("hidden");
-    }, 10000);
-  }
+  // const target = document.querySelector(".act .text-container");
+  // if (target) {
+  //   setTimeout(() => {
+  //     target.classList.remove("hidden");
+  //   }, 10000);
+  // }
 
   function applyRolesWithText() {
-    applyRoles();
-    nodes.forEach((node) => {
-      const textEl = node.querySelector(".text-container p");
-      if (!textEl) return;
-      if (node.classList.contains("act")) animateText(textEl);
-      else textEl.textContent = textEl.textContent;
-    });
+    applyRoles(nodes);
+
+    // один глобальний .text-container поза li
+    const container = document.querySelector(".text-container");
+    const p = container?.querySelector("p");
+    if (!container || !p) return;
+
+    const text = slideTexts[currentIndex] || "";
+    setSlideText(text);
   }
 
   function smoothScrollToTop(duration = 500) {
@@ -361,3 +363,60 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelector(".arrow-left").addEventListener("click", prev);
   document.querySelector(".arrow-right").addEventListener("click", next);
 });
+
+const slideTexts = [
+  "Communication to kids needs to be VISUAL...",
+  "In a motivating <br /> package...",
+  "And with the right <br /> incentives.",
+  "Testing ensures new knowledge is learned.",
+];
+
+let isAnimating = false;
+
+function setSlideText(htmlText) {
+  if (isAnimating) return;
+  isAnimating = true;
+
+  const container = document.querySelector(".text-container");
+  const p = container?.querySelector("p");
+  if (!container || !p) {
+    isAnimating = false;
+    return;
+  }
+
+  p.innerHTML = "";
+
+  // Розбиваємо на рядки по <br>
+  const lines = htmlText.split(/<br\s*\/?>/i);
+
+  let index = 0;
+
+  lines.forEach((line, lineIndex) => {
+    // Розбиваємо на слова по пробілах
+    const words = line.split(/\s+/).filter(Boolean);
+
+    words.forEach((word, wordIndex) => {
+      const span = document.createElement("span");
+      span.textContent = word; // слово цілком
+      span.style.display = "inline-block";
+      span.style.animationDelay = `${index * 40}ms`;
+      p.appendChild(span);
+      index++;
+
+      // ЯВНО додаємо пробіл між словами
+      if (wordIndex < words.length - 1) {
+        p.appendChild(document.createTextNode(" "));
+      }
+    });
+
+    // Перенос між рядками
+    if (lineIndex < lines.length - 1) {
+      p.appendChild(document.createElement("br"));
+    }
+  });
+
+  const totalDuration = index * 40 + 600;
+  setTimeout(() => {
+    isAnimating = false;
+  }, totalDuration);
+}
