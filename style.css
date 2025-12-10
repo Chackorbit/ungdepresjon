@@ -517,7 +517,7 @@ body {
 
 .arrow-left:active,
 .arrow-right:active {
-  background: #041c3c;
+  background: rgb(10, 58, 121) 90;
   color: #fff;
 }
 
