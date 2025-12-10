@@ -365,7 +365,7 @@ body {
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
   z-index: 5;
   opacity: 1; /* важливо: бачимо фон завжди */
-  pointer-events: auto;
+  pointer-events: none;
   white-space: normal;
 }
 
