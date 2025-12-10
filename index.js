@@ -224,18 +224,38 @@ document.addEventListener("DOMContentLoaded", () => {
       if (currentIndex === nodes.length - 1) {
         updateArrows();
 
-        return setTimeout(() => {
+        if (btnWrapper) {
+          btnWrapper.style.display = "flex";
+
+          setTimeout(() => {
+            if (window.innerWidth > 480) {
+              btnWrapper.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            } else {
+              btnWrapper.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest",
+              });
+            }
+          }, 1500);
+        }
+
+        setTimeout(() => {
           allowPageScroll = true;
-        }, 1000);
+        }, 500);
+
+        return;
       }
+
       allowPageScroll = false;
       updateArrows();
     }
 
     if (allowPageScroll) {
-      btnWrapper.style.display = "flex";
       if (btnWrapper) {
-        console.log("work");
+        btnWrapper.style.display = "flex";
 
         if (window.innerWidth <= 480) {
           btnWrapper.scrollIntoView({ behavior: "smooth" });
