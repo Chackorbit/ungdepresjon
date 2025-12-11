@@ -504,7 +504,7 @@ body {
   border: none;
   outline: none;
   border-radius: 50%;
-  background: #0da9ec90;
+  background: linear-gradient(135deg, #041c3c, #04203c);
   color: #000;
   padding: 20px;
   font-size: 60px;
@@ -523,7 +523,9 @@ body {
 
 .arrow-left:active,
 .arrow-right:active {
-  background: rgb(44, 114, 206);
+  background: linear-gradient(135deg, #0b79a5, #0894a9);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(19, 215, 244, 0.4);
   color: #fff;
 }
 
@@ -538,6 +540,9 @@ body {
   .arrow-right:hover {
     background: rgb(44, 114, 206);
     color: #000;
+    background: linear-gradient(135deg, #0b79a5, #0894a9);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(19, 215, 244, 0.4);
   }
 }
 @media screen and (max-width: 480px) {
