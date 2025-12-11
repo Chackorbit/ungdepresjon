@@ -212,6 +212,9 @@ document.addEventListener("DOMContentLoaded", () => {
     arrowRight.disabled = currentIndex === nodes.length - 1;
   }
 
+  const scrollArrow = document.getElementById("scroll-arrow");
+  let arrowTimeout = null;
+
   function next() {
     const btnWrapper = document.getElementById("btn-wrapper");
     const arrowLeft = document.querySelector(".arrow-left");
@@ -221,32 +224,34 @@ document.addEventListener("DOMContentLoaded", () => {
       maxSeenIndex = Math.max(maxSeenIndex, currentIndex);
       applyRolesWithText();
 
+      // якщо тепер ми на останньому (4-му) слайді
       if (currentIndex === nodes.length - 1) {
         updateArrows();
 
         if (btnWrapper) {
           btnWrapper.style.display = "flex";
-
-          setTimeout(() => {
-            if (window.innerWidth > 480) {
-              btnWrapper.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-            } else {
-              btnWrapper.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
-              });
-            }
-          }, 3500);
         }
 
-        setTimeout(() => {
-          allowPageScroll = true;
-        }, 500);
+        // показати стрілку через 1 секунду, якщо користувач ще не прокрутив
+        if (scrollArrow) {
+          clearTimeout(arrowTimeout);
+          arrowTimeout = setTimeout(() => {
+            if (window.scrollY < 50) {
+              scrollArrow.classList.remove("hidden");
+              scrollArrow.classList.add("visible");
+            }
+          }, 1000);
+        }
 
+        // дозволяємо подальший нативний скрол
+        allowPageScroll = true;
         return;
+      }
+
+      // на будь-якому іншому слайді – стрілку ховаємо
+      if (scrollArrow) {
+        scrollArrow.classList.remove("visible");
+        scrollArrow.classList.add("hidden");
       }
 
       allowPageScroll = false;
@@ -272,6 +277,12 @@ document.addEventListener("DOMContentLoaded", () => {
       document.documentElement.scrollTop ||
       document.body.scrollTop;
 
+    // при переході на попередній слайд стрілку ховаємо
+    if (scrollArrow) {
+      scrollArrow.classList.remove("visible");
+      scrollArrow.classList.add("hidden");
+    }
+
     if (scrollY > 0) {
       const topEl = document.getElementById("top");
       if (topEl) {
@@ -284,6 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateArrows();
   }
+
   updateArrows();
 
   list.addEventListener(
@@ -382,6 +394,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector(".arrow-left").addEventListener("click", prev);
   document.querySelector(".arrow-right").addEventListener("click", next);
+
+  // керуємо стрілкою при скролі
+  window.addEventListener("scroll", () => {
+    if (!scrollArrow) return;
+
+    const scrolled = window.scrollY || document.documentElement.scrollTop || 0;
+
+    // показуємо стрілку тільки на 4-му слайді
+    if (currentIndex === nodes.length - 1) {
+      if (scrolled > 50) {
+        // користувач вже поїхав вниз – ховаємо
+        scrollArrow.classList.remove("visible");
+        scrollArrow.classList.add("hidden");
+      } else {
+        // користувач повернувся вгору (але чекаємо, поки мине 1с – цим керує timeout у next)
+        // тут нічого не робимо, щоб не перебивати timeout
+      }
+    } else {
+      // на інших слайдах – завжди схована
+      scrollArrow.classList.remove("visible");
+      scrollArrow.classList.add("hidden");
+    }
+  });
 });
 
 const slideTexts = [

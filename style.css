@@ -505,7 +505,7 @@ body {
   outline: none;
   border-radius: 50%;
   background: linear-gradient(135deg, #041c3c, #04203c);
-  color: #000;
+  color: #fff;
   padding: 20px;
   font-size: 60px;
   cursor: pointer;
@@ -524,7 +524,6 @@ body {
 .arrow-left:active,
 .arrow-right:active {
   background: linear-gradient(135deg, #0b79a5, #0894a9);
-  transform: translateY(-3px) scale(1.05);
   box-shadow: 0 8px 25px rgba(19, 215, 244, 0.4);
   color: #fff;
 }
@@ -541,7 +540,6 @@ body {
     background: rgb(44, 114, 206);
     color: #000;
     background: linear-gradient(135deg, #0b79a5, #0894a9);
-    transform: translateY(-3px) scale(1.05);
     box-shadow: 0 8px 25px rgba(19, 215, 244, 0.4);
   }
 }
@@ -639,4 +637,34 @@ body {
   height: 100%;
   margin-top: 80px;
   transition: opacity 0.8s ease;
+}
+
+@keyframes arrow-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+#scroll-arrow {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#scroll-arrow.visible {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+#scroll-arrow.hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.svg {
+  fill: #137beb;
 }
