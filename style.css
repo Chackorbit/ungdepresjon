@@ -27,6 +27,12 @@ body {
   scroll-behavior: smooth;
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 #intro {
   position: fixed;
   top: 50%;
@@ -517,7 +523,7 @@ body {
 
 .arrow-left:active,
 .arrow-right:active {
-  background: rgb(10, 58, 121) 90;
+  background: rgb(44, 114, 206);
   color: #fff;
 }
 
@@ -530,7 +536,7 @@ body {
 @media screen and (min-width: 481px) {
   .arrow-left:hover,
   .arrow-right:hover {
-    background: #dbdbdb;
+    background: rgb(44, 114, 206);
     color: #000;
   }
 }

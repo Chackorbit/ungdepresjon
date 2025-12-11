@@ -10,79 +10,79 @@ document.addEventListener("DOMContentLoaded", () => {
   let accumulatedDelta = 0;
   let pageScrollTimeout = null;
 
-  const intro = document.getElementById("intro");
-  const introVideo = document.getElementById("introVideo");
+  // ВІДКЛЮЧЕНО інтро-відео / оверлей
+  // const intro = document.getElementById("intro");
+  // const introVideo = document.getElementById("introVideo");
   const playBtn = document.querySelector(".playBtn");
 
-  if (!intro || !introVideo) return;
+  // if (!intro || !introVideo) return;
 
-  const introGif = document.getElementById("introGif");
+  // const introGif = document.getElementById("introGif");
+  // const isIOS =
+  //   /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  // const isMobile = window.innerWidth <= 480;
 
-  const isIOS =
-    /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  const isMobile = window.innerWidth <= 480;
+  // if (isIOS && isMobile) {
+  //   introGif.src = "./img/GDCRedirectMobile.gif?rand=" + Date.now();
+  //   introGif.style.display = "block";
+  // }
+  // if (isIOS && isMobile) {
+  //   introGif.style.display = "block";
+  //   introVideo.style.display = "none";
+  // } else {
+  //   introVideo.style.display = "block";
+  //   introVideo.muted = true;
+  //   introVideo.playsInline = true;
+  //   introVideo.autoplay = true;
+  //   introVideo.loop = true;
 
-  if (isIOS && isMobile) {
-    introGif.src = "./img/GDCRedirectMobile.gif?rand=" + Date.now();
-    introGif.style.display = "block";
-  }
-  if (isIOS && isMobile) {
-    introGif.style.display = "block";
-    introVideo.style.display = "none";
-  } else {
-    introVideo.style.display = "block";
-    introVideo.muted = true;
-    introVideo.playsInline = true;
-    introVideo.autoplay = true;
-    introVideo.loop = true;
+  //   const mobileSrc = "./img/GDCRedirectMobile.mp4";
+  //   const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4";
+  //   const sourceEl = introVideo.querySelector("source");
 
-    const mobileSrc = "./img/GDCRedirectMobile.mp4";
-    const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4";
-    const sourceEl = introVideo.querySelector("source");
+  //   sourceEl.src = window.innerWidth <= 480 ? mobileSrc : desktopSrc;
+  //   introVideo.load();
 
-    sourceEl.src = window.innerWidth <= 480 ? mobileSrc : desktopSrc;
-    introVideo.load();
+  //   introVideo.play().catch(() => {
+  //     intro.addEventListener(
+  //       "click",
+  //       () => {
+  //         introVideo.play().catch(() => {});
+  //       },
+  //       { once: true }
+  //     );
+  //   });
+  // }
 
-    introVideo.play().catch(() => {
-      intro.addEventListener(
-        "click",
-        () => {
-          introVideo.play().catch(() => {});
-        },
-        { once: true }
-      );
-    });
-  }
+  // setTimeout(() => {
+  //   intro.style.opacity = 0;
+  //   introGif.style.opacity = 0;
+  // }, 8000);
+  // setTimeout(() => {
+  //   intro.style.display = "none";
+  // }, 9000);
 
-  setTimeout(() => {
-    intro.style.opacity = 0;
-    introGif.style.opacity = 0;
-  }, 8000);
-  setTimeout(() => {
-    intro.style.display = "none";
-  }, 9000);
+  // const mobileSrc = "./img/GDCRedirectMobile.mp4";
+  // const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4";
 
-  const mobileSrc = "./img/GDCRedirectMobile.mp4";
-  const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4";
+  // function updateVideoSource() {
+  //   const isMobile = window.innerWidth <= 700;
+  //   const sourceEl = introVideo.querySelector("source");
+  //   const currentSrc = sourceEl.src;
 
-  function updateVideoSource() {
-    const isMobile = window.innerWidth <= 700;
-    const sourceEl = introVideo.querySelector("source");
-    const currentSrc = sourceEl.src;
+  //   if (isMobile && !currentSrc.includes("Mobile")) {
+  //     introVideo.pause();
+  //     sourceEl.src = mobileSrc;
+  //     introVideo.load();
+  //   } else if (!isMobile && !currentSrc.includes("Desktop")) {
+  //     introVideo.pause();
+  //     sourceEl.src = desktopSrc;
+  //     introVideo.load();
+  //   }
+  // }
 
-    if (isMobile && !currentSrc.includes("Mobile")) {
-      introVideo.pause();
-      sourceEl.src = mobileSrc;
-      introVideo.load();
-    } else if (!isMobile && !currentSrc.includes("Desktop")) {
-      introVideo.pause();
-      sourceEl.src = desktopSrc;
-      introVideo.load();
-    }
-  }
-
-  updateVideoSource();
-  window.addEventListener("resize", updateVideoSource);
+  // updateVideoSource();
+  // window.addEventListener("resize", updateVideoSource);
 
   function applyRoles() {
     nodes.forEach((node, i) => {
@@ -239,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 block: "nearest",
               });
             }
-          }, 1500);
+          }, 3500);
         }
 
         setTimeout(() => {
