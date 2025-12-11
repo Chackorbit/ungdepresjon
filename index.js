@@ -10,79 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let accumulatedDelta = 0;
   let pageScrollTimeout = null;
 
-  // ВІДКЛЮЧЕНО інтро-відео / оверлей
-  // const intro = document.getElementById("intro");
-  // const introVideo = document.getElementById("introVideo");
+  // інтро відключене
   const playBtn = document.querySelector(".playBtn");
-
-  // if (!intro || !introVideo) return;
-
-  // const introGif = document.getElementById("introGif");
-  // const isIOS =
-  //   /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  // const isMobile = window.innerWidth <= 480;
-
-  // if (isIOS && isMobile) {
-  //   introGif.src = "./img/GDCRedirectMobile.gif?rand=" + Date.now();
-  //   introGif.style.display = "block";
-  // }
-  // if (isIOS && isMobile) {
-  //   introGif.style.display = "block";
-  //   introVideo.style.display = "none";
-  // } else {
-  //   introVideo.style.display = "block";
-  //   introVideo.muted = true;
-  //   introVideo.playsInline = true;
-  //   introVideo.autoplay = true;
-  //   introVideo.loop = true;
-
-  //   const mobileSrc = "./img/GDCRedirectMobile.mp4";
-  //   const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4";
-  //   const sourceEl = introVideo.querySelector("source");
-
-  //   sourceEl.src = window.innerWidth <= 480 ? mobileSrc : desktopSrc;
-  //   introVideo.load();
-
-  //   introVideo.play().catch(() => {
-  //     intro.addEventListener(
-  //       "click",
-  //       () => {
-  //         introVideo.play().catch(() => {});
-  //       },
-  //       { once: true }
-  //     );
-  //   });
-  // }
-
-  // setTimeout(() => {
-  //   intro.style.opacity = 0;
-  //   introGif.style.opacity = 0;
-  // }, 8000);
-  // setTimeout(() => {
-  //   intro.style.display = "none";
-  // }, 9000);
-
-  // const mobileSrc = "./img/GDCRedirectMobile.mp4";
-  // const desktopSrc = "./img/GDCRedirectDesktopresolution.mp4";
-
-  // function updateVideoSource() {
-  //   const isMobile = window.innerWidth <= 700;
-  //   const sourceEl = introVideo.querySelector("source");
-  //   const currentSrc = sourceEl.src;
-
-  //   if (isMobile && !currentSrc.includes("Mobile")) {
-  //     introVideo.pause();
-  //     sourceEl.src = mobileSrc;
-  //     introVideo.load();
-  //   } else if (!isMobile && !currentSrc.includes("Desktop")) {
-  //     introVideo.pause();
-  //     sourceEl.src = desktopSrc;
-  //     introVideo.load();
-  //   }
-  // }
-
-  // updateVideoSource();
-  // window.addEventListener("resize", updateVideoSource);
 
   function applyRoles() {
     nodes.forEach((node, i) => {
@@ -109,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!el) return;
 
     const html = el.innerHTML;
-
     el.textContent = "";
 
     el.style.opacity = 0;
@@ -141,23 +69,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // const target = document.querySelector(".act .text-container");
-  // if (target) {
-  //   setTimeout(() => {
-  //     target.classList.remove("hidden");
-  //   }, 10000);
-  // }
-
   function applyRolesWithText() {
     applyRoles(nodes);
 
-    // один глобальний .text-container поза li
     const container = document.querySelector(".text-container");
     const p = container?.querySelector("p");
     if (!container || !p) return;
 
     const text = slideTexts[currentIndex] || "";
     setSlideText(text);
+
+    // на останньому слайді завжди дозволяємо сторінці скролитись
+    if (currentIndex === nodes.length - 1) {
+      allowPageScroll = true;
+    }
   }
 
   function smoothScrollToTop(duration = 500) {
@@ -205,10 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const arrowLeft = document.querySelector(".arrow-left");
     const arrowRight = document.querySelector(".arrow-right");
 
-    // ліва кнопка неактивна якщо ми на першому слайді
     arrowLeft.disabled = currentIndex === 0;
-
-    // права кнопка неактивна якщо ми на останньому слайді
     arrowRight.disabled = currentIndex === nodes.length - 1;
   }
 
@@ -217,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function next() {
     const btnWrapper = document.getElementById("btn-wrapper");
-    const arrowLeft = document.querySelector(".arrow-left");
 
     if (currentIndex < nodes.length - 1) {
       currentIndex++;
@@ -243,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }, 1000);
         }
 
-        // дозволяємо подальший нативний скрол
         allowPageScroll = true;
         return;
       }
@@ -265,8 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (window.innerWidth <= 480) {
           btnWrapper.scrollIntoView({ behavior: "smooth" });
         }
-
-        allowPageScroll = false;
+        // allowPageScroll залишаємо true
       }
     }
   }
@@ -319,12 +238,9 @@ document.addEventListener("DOMContentLoaded", () => {
           next();
           accumulatedDelta = 0;
 
+          // коли .next вже нема (останній слайд) – просто показуємо btnWrapper
           if (!list.querySelector(".next") && btnWrapper) {
-            allowPageScroll = false;
-            btnWrapper.scrollIntoView({ behavior: "smooth" });
-            pageScrollTimeout = setTimeout(() => {
-              allowPageScroll = true;
-            }, 1000);
+            btnWrapper.style.display = "flex";
           }
 
           setTimeout(() => (isScrolling = false), scrollDelay);
@@ -370,7 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!li.classList.contains("act")) return;
     if (video.paused) {
       video.play();
-      playBtn.remove();
+      if (playBtn) playBtn.remove();
     } else {
       video.pause();
     }
@@ -404,21 +320,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // показуємо стрілку тільки на 4-му слайді
     if (currentIndex === nodes.length - 1) {
       if (scrolled > 50) {
-        // користувач вже поїхав вниз – ховаємо
         scrollArrow.classList.remove("visible");
         scrollArrow.classList.add("hidden");
-      } else {
-        // користувач повернувся вгору (але чекаємо, поки мине 1с – цим керує timeout у next)
-        // тут нічого не робимо, щоб не перебивати timeout
       }
+      // якщо повернувся вище 50px — повторне показування
+      // відбувається тільки через next() і timeout
     } else {
-      // на інших слайдах – завжди схована
       scrollArrow.classList.remove("visible");
       scrollArrow.classList.add("hidden");
     }
   });
 });
 
+// Тексти слайдів
 const slideTexts = [
   "Communication to kids needs to be VISUAL...",
   "In a motivating <br /> package...",
@@ -441,30 +355,26 @@ function setSlideText(htmlText) {
 
   p.innerHTML = "";
 
-  // Розбиваємо на рядки по <br>
   const lines = htmlText.split(/<br\s*\/?>/i);
 
   let index = 0;
 
   lines.forEach((line, lineIndex) => {
-    // Розбиваємо на слова по пробілах
     const words = line.split(/\s+/).filter(Boolean);
 
     words.forEach((word, wordIndex) => {
       const span = document.createElement("span");
-      span.textContent = word; // слово цілком
+      span.textContent = word;
       span.style.display = "inline-block";
       span.style.animationDelay = `${index * 40}ms`;
       p.appendChild(span);
       index++;
 
-      // ЯВНО додаємо пробіл між словами
       if (wordIndex < words.length - 1) {
         p.appendChild(document.createTextNode(" "));
       }
     });
 
-    // Перенос між рядками
     if (lineIndex < lines.length - 1) {
       p.appendChild(document.createElement("br"));
     }
