@@ -335,6 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Тексти слайдів
 const slideTexts = [
   "Communication to kids needs to be VISUAL...",
+  "Communication to kids needs to be VISUAL...",
   "In a motivating <br /> package...",
   "And with the right <br /> incentives.",
   "Testing ensures new knowledge is learned.",
